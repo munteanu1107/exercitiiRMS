@@ -14,7 +14,7 @@ function verifyLengthNumber() {
 }
 
 function secondSolution() {
-    var givenNumber = document.getElementById("number").value
+    var givenNumber = document.getElementById("number").value;
     var x = (document.getElementById("number").value - 0);
     var lastNumb = 0;
     var sum = 0;
