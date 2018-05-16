@@ -42,7 +42,7 @@ function verifyNumber() {
 
     if(arrayOfPrimeFactors.length > 1) {
         var i = 0;
-        var result = "Factorii primi ai numarului " + displayNumber + " sunt: "
+        var result = "Factorii primi ai numarului " + numberToBeDisplayed + " sunt: "
 
         while (i < arrayOfPrimeFactors.length) {
             result += arrayOfPrimeFactors[i]
@@ -54,7 +54,7 @@ function verifyNumber() {
             }
         }
     } else {
-        var result = "Factorii primi ai numarului " + displayNumber + " sunt: " + arrayOfPrimeFactors[0]
+        var result = "Factorii primi ai numarului " + numberToBeDisplayed + " sunt: " + arrayOfPrimeFactors[0]
     }
 
     console.log(result)
