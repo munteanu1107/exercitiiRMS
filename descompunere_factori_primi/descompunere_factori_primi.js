@@ -12,7 +12,7 @@ function verifyNumber() {
     var divisibleByTwo;
 
     if(number < 2) {
-        return console.error("Incorrect number (Number should be grather than 1) (*_*) ")
+        return console.error("Incorrect number (Number should be greater than 1) (*_*) ")
     }
 
     while(number > 1) { // se determina daca numarul introdus are divizori proprii
@@ -32,7 +32,6 @@ function verifyNumber() {
 
         if(power > 0) {
             arrayOfPrimeFactors[arrayOfPrimeFactors.length] = divisor + (power > 1 ? " ^ " + power : "");
-            console.log(arrayOfPrimeFactors)
         }
 
         divisor += 2;
