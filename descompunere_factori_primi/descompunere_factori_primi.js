@@ -11,6 +11,9 @@ function verifyNumber() {
     var arrayOfPrimeFactors = [];
     var divisibleByTwo;
 
+    if(number < 2) {
+        return console.error("Incorrect number (Number should be grather than 1) (*_*) ")
+    }
 
     while(number > 1) { // se determina daca numarul introdus are divizori proprii
 
