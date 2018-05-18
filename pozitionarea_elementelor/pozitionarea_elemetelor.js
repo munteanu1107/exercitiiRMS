@@ -1,55 +1,77 @@
 window.onload = (function() {
-    var backSlash = document.getElementById("diagonala-principala");
-    var upSlash = document.getElementById("diagonala-secundara");
-    var colorBackSlash = document.getElementById("down-diagonala-principala");
-    var colorUpSlash = document.getElementById("up-diagonala-secundara");
-    var colorLines = document.getElementById("linii-pare");
-    var chessTableEl = document.getElementById("tabla-sah");
+    // DOM buttons
+    var backSlashBtn;
+    var upSlashBtn;
+    var colorBackSlashBtn;
+    var colorUpSlashBtn;
+    var colorLinesBtn;
+    var chessTableBtn;
 
-    var parentDivChildNodes;
-    var row;
-    var pixelUnit = "px"
-    var parentDiv = document.getElementById("parent-div")
-    var parentDivWidth = 400;
-    var parentDivHeight = parentDivWidth;
-    var parentDivBackgroundColor = "#f1f1f1"
-    var parentDivBorder = "1px solid #000000"
 
-    parentDiv.style.width = parentDivWidth + pixelUnit;
-    parentDiv.style.height = parentDivHeight + pixelUnit;
-    parentDiv.style.backgroundColor = parentDivBackgroundColor;
-    parentDiv.style.border = parentDivBorder;
+    var cols = 12;
+    var lines = cols;
+    var el = 50;
+    var distance = 4;
+    var matrixOfElements = [];
 
-    function createSpanElements(bgColor) {
-        var span = document.createElement("div");
-        span.style.width = (parentDivWidth / 10) + pixelUnit;
-        span.style.height = (parentDivHeight / 10) + pixelUnit;
-        span.style.marginLeft = 5 + pixelUnit;
-        span.style.display = "inline-block";
-        span.style.backgroundColor = bgColor;
-        row.appendChild(span);
-    }
+    var parentDiv;
+    var width = cols * (el + distance) + distance;
+    var height = lines * (el + distance) + distance;
 
-    function pushSpanElementToParentDiv() {
-        for (var i=0; i < (parentDivHeight / 50); i++){
-            row = document.createElement("div");
-            parentDiv.appendChild(row);
-            for (var j=0; j < (parentDivHeight / 50); j++){
-                createSpanElements("#12c1ed");
+    parentDiv = document.getElementById("parent-div");
+    parentDiv.style.height = height + "px";
+    parentDiv.style.width = width + "px";
+    parentDiv.style.border = "1px solid #000";
+    parentDiv.style.fontSize = "0px";
+    parentDiv.style.display = "inline-block";
+
+    function generateDivElement() {
+        var childDiv;
+        var generateId = 1;
+
+        for(var i = 0; i < lines; i++) {
+            matrixOfElements[i] = [];
+
+            for(var j = 0; j < cols; j++) {
+                childDiv = document.createElement("div");
+                childDiv.id = generateId;
+                generateId++;
+                childDiv.style.height = el + "px";
+                childDiv.style.width = el + "px";
+                childDiv.style.backgroundColor = "#57ede0";
+                childDiv.style.display = "inline-block";
+                childDiv.style.marginLeft = distance + "px";
+                childDiv.style.marginTop = distance + "px";
+
+                childDiv.onmouseover = returnMouseOverElement;
+                childDiv.onmouseleave  = returnMouseLeaveElement;
+
+                matrixOfElements[i][j] = childDiv;
+                parentDiv.appendChild(childDiv);
             }
+
         }
 
-        parentDivChildNodes = Array.prototype.slice.call(parentDiv.childNodes);
+        return matrixOfElements;
+
     }
 
+    generateDivElement();
 
+    function returnMouseOverElement() {
+        this.style.opacity = "0.5"
+    }
+
+    function returnMouseLeaveElement() {
+        this.style.opacity = "1"
+    }
 
     function getAccessToDomElements(arr, callback) {
         var index = index;
         var loopArray = [];
+
         for(var i = 0; i < arr.length; i++) {
-            var test = arr[i].childNodes;
-            loopArray[loopArray.length] = Array.prototype.slice.call(test);
+            loopArray[loopArray.length] = arr[i];
 
             callback(loopArray, i);
         }
@@ -66,96 +88,73 @@ window.onload = (function() {
     }
 
     function colorEvenLines(item, counter) {
-        for(var j = 0; j <= (item[counter].length - 1); j++) {
+        for(var j = 0; j < item[counter].length; j++) {
             if(counter % 2 !== 0) {
-                item[counter][j].style.backgroundColor = "#523456";
+                item[counter][j].style.backgroundColor = "#42e20d";
             }
         }
     }
 
     function colorUpToSlash(item, counter) {
-        for(var j = (item[counter].length - (counter + 1)); j >= 0; j--) {
-            item[counter][j].style.backgroundColor = "#fff";
+        for(var j = (item[counter].length - (counter + 2)); j >= 0; j--) {
+            item[counter][j].style.backgroundColor = "#c01ac9";
 
         }
     }
 
-    function colorDown(item, counter) {
+    function colorBackSlash(item, counter) {
         for(var j = 0; j < (item.length - 1); j++) {
-            //if(counter > 0) {
-                item[counter + 1][j].style.backgroundColor = "#896123";
-            //}
+            item[counter][j].style.backgroundColor = "#896123";
         }
     }
 
     function getBackSlash() {
-        var loopArray = [];
-        for(var i = 0; i < parentDivChildNodes.length; i++) {
-            var test = parentDivChildNodes[i].childNodes;
-            loopArray[loopArray.length] = Array.prototype.slice.call(test);
-        }
-
-        var i = 0;
-        var j = 0;
-        while(i < parentDivChildNodes.length && j < loopArray.length) {
-            loopArray[i][j].style.backgroundColor = "#523456";
-            j++;
-            i++;
+        for (var i = 0; i < matrixOfElements.length; i++) {
+            for (var j = 0; j < matrixOfElements.length; j++) {
+                matrixOfElements[i][j].style.backgroundColor = "#523456";
+                i++;
+            }
         }
     }
 
     function getSlash() {
-        var loopArray = [];
-        for(var i = 0; i < parentDivChildNodes.length; i++) {
-            var test = parentDivChildNodes[i].childNodes;
-            loopArray[loopArray.length] = Array.prototype.slice.call(test);
-        }
-
-        var i = 0;
-        var j = (loopArray.length - 1);
-        while (i < parentDivChildNodes.length && j >= 0) {
-            loopArray[i][j].style.backgroundColor = "#ff0000"
-            j--;
-            i++;
+        for (var i = 0; i < matrixOfElements.length; i++) {
+            for (var j = (matrixOfElements.length - 1); j >= 0; j--) {
+                matrixOfElements[i][j].style.backgroundColor = "#ff0000"
+                i++
+            }
         }
     }
 
-    pushSpanElementToParentDiv();
+    backSlashBtn = document.getElementById("diagonala-principala");
+    upSlashBtn = document.getElementById("diagonala-secundara");
+    colorBackSlashBtn = document.getElementById("down-diagonala-principala");
+    colorUpSlashBtn = document.getElementById("up-diagonala-secundara");
+    colorLinesBtn = document.getElementById("linii-pare");
+    chessTableBtn = document.getElementById("tabla-sah");
 
-    backSlash.addEventListener("click", function() {
-        parentDiv.innerHTML = ""
-        pushSpanElementToParentDiv();
+    backSlashBtn.addEventListener("click", function() {
         getBackSlash();
     });
 
-    upSlash.addEventListener("click", function() {
-        parentDiv.innerHTML = ""
-        pushSpanElementToParentDiv();
+    upSlashBtn.addEventListener("click", function() {
         getSlash()
     });
 
-    colorLines.addEventListener("click", function() {
-        parentDiv.innerHTML = ""
-        pushSpanElementToParentDiv();
-        getAccessToDomElements(parentDivChildNodes, colorEvenLines);
+    colorLinesBtn.addEventListener("click", function() {
+        getAccessToDomElements(matrixOfElements, colorEvenLines);
     });
 
-    colorUpSlash.addEventListener("click", function() {
-        parentDiv.innerHTML = ""
-        pushSpanElementToParentDiv();
-        getAccessToDomElements(parentDivChildNodes, colorUpToSlash);
+    colorUpSlashBtn.addEventListener("click", function() {
+        getAccessToDomElements(matrixOfElements, colorUpToSlash);
     });
 
-    colorBackSlash.addEventListener("click", function() {
-        parentDiv.innerHTML = ""
-        pushSpanElementToParentDiv();
-        getAccessToDomElements(parentDivChildNodes, colorDown);
+    colorBackSlashBtn.addEventListener("click", function() {
+        getAccessToDomElements(matrixOfElements, colorBackSlash);
     });
 
-    chessTableEl.addEventListener("click", function() {
-        parentDiv.innerHTML = ""
-        pushSpanElementToParentDiv();
-        getAccessToDomElements(parentDivChildNodes, chessTable);
+    chessTableBtn.addEventListener("click", function() {
+        getAccessToDomElements(matrixOfElements, chessTable);
     });
 
-}())
+}());
