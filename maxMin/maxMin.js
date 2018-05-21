@@ -4,26 +4,20 @@ var executeVerification = document.getElementById("js-verifica-numar");
 
 function verifyNumber() {
 
-    var number = (document.getElementById("number").value - 0);
-    var lastNumber = 0;
-    var arrayOfNumbers = [];
+    var arrayOfNumbers = [1, 2, 8, 6, 3];
     var max = 0;
     var min = 0;
 
-    while(number >= 0) {
-        lastNumber = number % 10;
-        arrayOfNumbers[arrayOfNumbers.length] = lastNumber;
-        number = parseInt(number/10);
-
-        if(number === 0) {
-            arrayOfNumbers[arrayOfNumbers.length] = 0;
-            break;
-        }
-    }
-
     for(var i = 0; i <= arrayOfNumbers.length; i++) {
+        if(max < arrayOfNumbers[i]) {
+            max = arrayOfNumbers[i];
+        }
+
+        if(arrayOfNumbers[i] < arrayOfNumbers[i + 1]) {
+            min = arrayOfNumbers[i]
+        }
         max < arrayOfNumbers[i] ? max = arrayOfNumbers[i] : max;
-        min > arrayOfNumbers[i] ? min = arrayOfNumbers[i] : min;
+        arrayOfNumbers[i] < arrayOfNumbers[i + 1] ? min = arrayOfNumbers[i] : min;
     }
 
    return document.getElementsByClassName("result")[0].innerHTML = "Cea mai mica cifra din numar este " + min + " iar cea mai mare " + max;
