@@ -1,33 +1,75 @@
 var executeVerification = document.getElementById("js-verifica-numar");
 
-// VERIFICA REZULTATUL IN CONSOLE!!!!
+function findCmmdc() {
+    var number1 = (document.getElementById("number1").value - 0);
+    var number2 = (document.getElementById("number2").value - 0);
 
-function verifyNumber() {
+    var primeFactorsNumber1 = findPrimeFactors(number1);
+    var primeFactorsNumber2 = findPrimeFactors(number2);
 
-    var number1 = (document.getElementById("number1").value - 0); // numar1 citit de la tastatura
-    var number2 = (document.getElementById("number2").value - 0); // numar2 citit de la tastatura
-    var cmmdc;
+    var cmmdc = 1;
 
-    if((number1 === 0 || number2 === 0) || (number1 === 1 || number2 === 1)) { //numerele trebuie sa fie diferite de 0
-        return document.getElementsByClassName("result")[0].innerHTML = "introdu numere mai mari ca 1"
+    for(var i = 0; i < primeFactorsNumber1.length; i++) {
+        for(var j = 0; j < primeFactorsNumber2.length; j++) {
+            if(primeFactorsNumber1[i].factor === primeFactorsNumber2[j].factor) {
+                if(primeFactorsNumber1[i].power < primeFactorsNumber2[j].power) {
+                    cmmdc *= Math.pow(primeFactorsNumber1[i].factor, primeFactorsNumber1[i].power);
+                } else {
+                    cmmdc *= Math.pow(primeFactorsNumber2[j].factor, primeFactorsNumber2[j].power);
+                }
+            }
+        }
     }
 
-    if(number1 < number2) {
-        var intermediare = number1; // valoare intermediara ce retine valoarea numarului1
-        number1 = number2; // numarul1 devine numarul2 iar
-        number2 = intermediare; //numarul2 devine numarul1
-    }
-
-    var rest = number1 % number2 // se obtine restul impartirii numerelor
-    while(rest !== 0) { // cat timp restul este diferit de 0
-        number1 = number2; // numarul1 ia valoarea numarului2
-        number2 = rest;  // iar numarul2 ia valoarea restului ca mai apoi
-        rest = number1 % number2; // numarul2 care este acum asignat numarului1 sa fie imparit la restul anterior asignat numarului2
-    }
-
-   cmmdc = number2;
-
-   return document.getElementsByClassName("result")[0].innerHTML = "Cmmdc este: " + cmmdc
+    return document.getElementsByClassName("result")[0].innerHTML = "Cmmdc este: " + cmmdc;
 }
 
-executeVerification.addEventListener("click", verifyNumber);
+function findPrimeFactors(num) {
+    var number = num;
+    var divisor = 3;
+    var power = 0;
+    var arrayOfPrimeFactors = [];
+    var primeFactors = {};
+    var divisibleByTwo;
+
+    if(number < 2) {
+        return console.error("Incorrect number (Number should be greater than 1) (*_*) ");
+    }
+
+    while(number > 1) {
+
+        while(number % 2 === 0) {
+            power++;
+            number = number / 2;
+
+            primeFactors.factor = 2;
+            primeFactors.power = power;
+        }
+
+        if(power > 0) {
+            arrayOfPrimeFactors[arrayOfPrimeFactors.length] = primeFactors;
+            primeFactors = {};
+        }
+
+        power = 0;
+
+        while(number % divisor === 0) {
+            power++;
+            number = number / divisor;
+            primeFactors.factor = divisor;
+            primeFactors.power = power;
+        }
+
+        if(power > 0) {
+            arrayOfPrimeFactors[arrayOfPrimeFactors.length] = primeFactors;
+            primeFactors = {};
+        }
+
+        divisor += 2;
+
+    }
+
+    return arrayOfPrimeFactors;
+}
+
+executeVerification.addEventListener("click", findCmmdc);
