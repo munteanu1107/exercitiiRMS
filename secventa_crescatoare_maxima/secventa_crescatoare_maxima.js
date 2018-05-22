@@ -1,10 +1,8 @@
 var executeVerification = document.getElementById("js-verifica-numar");
 
-// am luat numarul de la tastatura si l-am spart in cifre pe care le-am introdus pe rand intr-un veector
-
 function verifyNumber() {
 
-    var arrayOfNumbers = [1, 2, 2, 4, 4, 4, 4, 9, 9, 9, 9, 9, 7, 7, 7];
+    var arrayOfNumbers = [2, 3, 1, 2, 3, 4, 5, 3, 4,6];
     var longestSequence = [];
     var maxContor = 0;
     var contor = 1;
@@ -14,11 +12,10 @@ function verifyNumber() {
     var hash = {};
 
     while(i <= arrayOfNumbers.length) {
-        if(arrayOfNumbers[i] === arrayOfNumbers[i + 1]) {
+        if(arrayOfNumbers[i] < arrayOfNumbers[i + 1]) {
             contor++;
             if(contor > maxContor) {
                 maxContor = contor;
-                hash.val = val;
                 hash.startPosition = startPosition;
             }
         } else {
@@ -30,7 +27,7 @@ function verifyNumber() {
         i++;
     }
 
-    for(var j = hash.startPosition; j < (hash.startPosition + maxContor); j++) {
+    for(var j = hash.startPosition; j < hash.startPosition + maxContor; j++) {
         longestSequence[longestSequence.length] = arrayOfNumbers[j];
     }
 
