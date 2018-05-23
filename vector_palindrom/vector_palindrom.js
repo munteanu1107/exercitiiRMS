@@ -5,7 +5,6 @@ executeVerification.addEventListener("click", verifyIfGivenArrayIsPalindrome);
 function verifyIfGivenArrayIsPalindrome() {
     var vector = [1, 2, 3, 4, 3, 2, 1];
     var reversedVector = [];
-    var contor = 0;
     var isPalindrome = true;
 
     for(var i = vector.length - 1; i >= 0; i--) {
