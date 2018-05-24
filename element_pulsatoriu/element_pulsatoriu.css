@@ -1,0 +1,25 @@
+@keyframes pulse {
+    0% {
+        transform: scale(1, 1);
+    }
+    50% {
+        transform: scale(1.1, 1.1);
+    }
+    100% {
+        transform: scale(1, 1);
+    };
+}
+
+.element-pulsatoriu {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #007FFF;
+    animation: pulse 1s linear infinite;
+}
