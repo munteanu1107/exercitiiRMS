@@ -38,7 +38,7 @@
                 containerEl.style.height = containerHeight + (100 * currentOscillation) + unit;
                 containerEl.style.marginLeft = -1 * (50 * currentOscillation) + unit;
                 containerEl.style.marginTop = -1 * (50 * currentOscillation) + unit;
-                i+= speed;
+                i += speed;
                 window.requestAnimationFrame(animate);
 
         }
