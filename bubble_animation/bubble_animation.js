@@ -10,6 +10,7 @@ window.onload = (function() {
     var circleHeight;
     var bubblesArray = [];
     var elConfig = {};
+    var n = 500;
 
     screenWidth = window.innerWidth;
     screenHeight = window.innerHeight;
@@ -18,7 +19,7 @@ window.onload = (function() {
     unit = "px";
 
     function createBubble() {
-        for(var i = 1; i <= 50; i++) {
+        for(var i = 1; i <= n; i++) {
             circle = document.createElement("div");
             circleWidth = Math.floor(Math.random() * 50);
             circleHeight = circleWidth;
@@ -28,14 +29,17 @@ window.onload = (function() {
             circle.style.border = "1px solid #007FFF";
             circle.style.borderRadius = "50%";
             circle.style.position = "absolute";
+            ///circle.style.transform = ("translateZ(0)")
 
             body.appendChild(circle);
 
             elConfig.el = circle;
-            elConfig.speed = 6;
-            elConfig.oscillationSpeed = Math.floor(Math.random() * 50);
+            elConfig.speed = 5 + Math.random() * 10;
+            elConfig.oscillationSpeed = Math.random();
             elConfig.posX = screenWidth / 2;
             elConfig.posY = screenHeight / 2;
+            elConfig.osc = 0;
+            elConfig.oscDist = Math.random() * 100;
 
             circle.style.top =  elConfig.posY + unit;
             circle.style.left = elConfig.posX + unit;
@@ -59,29 +63,23 @@ window.onload = (function() {
         var element;
         var index = 0;
 
-
-
         for(var i = 0; i < bubblesArray.length; i++) {
-            var currentOscillation = Math.abs(Math.sin(i).toPrecision(2));
-            currentOscillation = currentOscillation < .2 ? 0 : currentOscillation;
 
             element = bubblesArray[i].el;
+            bubblesArray[i].osc += bubblesArray[i].oscillationSpeed;
             bubblesArray[i].posY -= bubblesArray[i].speed;
-            bubblesArray[i].posX += Math.sin(5) * bubblesArray[i].oscillationSpeed;
 
             if(bubblesArray[i].posY < 0) {
                 bubblesArray[i].posY = coordY;
+                bubblesArray[i].posX = coordX;
             }
 
             element.style.top = bubblesArray[i].posY + unit;
-            element.style.left = -(bubblesArray[i].posX) + unit;
-            index += bubblesArray[i].speed;
+            element.style.left = (bubblesArray[i].posX + Math.sin(bubblesArray[i].osc) * bubblesArray[i].oscDist) + unit;
         }
 
         window.requestAnimationFrame(moveBubbelOnTop);
     }
 
-    document.addEventListener("mousemove", function(event) {
-        getRealTimeMouseCoord(event);
-    });
+    document.addEventListener("mousemove",getRealTimeMouseCoord);
 }());
