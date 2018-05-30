@@ -102,10 +102,9 @@ window.onload = (function() {
         maxVal < val ? val = maxVal : val;
 
         if(val <= maxVal && val > 0) {
-            // var getLeftPosition = val * (getSliderCoord.width - indicatorWidth) / 100
-            currentVal = Math.round((((val) * 100) / maxVal));
-            currentPos =Math.round(currentVal - 100);
-            defaultVal = currentPos;
+            var getDifferenceFromRight = (val * 100) / maxVal;
+            var getLeftPosition = (getSliderCoord.width - indicatorWidth) * getDifferenceFromRight / 100
+            defaultVal = (getSliderCoord.width - indicatorWidth) - getLeftPosition;
         }
         indicator.style.left = defaultVal + unit;
     }
