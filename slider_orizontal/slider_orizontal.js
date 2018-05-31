@@ -41,8 +41,8 @@ window.onload = (function() {
     getIndicatorCoord = indicator.getBoundingClientRect();
     getSliderCoord = slider.getBoundingClientRect();
 
-    var minVal = -10;
-    var maxVal = 10;
+    var minVal = 49;
+    var maxVal = 100;
     var keepMin = 0;
     var defaultVal = 0;
     var currentPos = 0;
@@ -53,7 +53,7 @@ window.onload = (function() {
         keepMin = minVal;
         maxVal = maxVal + Math.abs(minVal);
         minVal = 0;
-        setValue(5);
+        // setValue(5);
     }
 
 
