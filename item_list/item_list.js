@@ -1,3 +1,4 @@
+"use strict"
 window.onload = (function() {
     var parentDiv;
     var ul;
@@ -10,7 +11,8 @@ window.onload = (function() {
     var liBtnRemove;
     var unit = "px";
     var liArray = [];
-    var liConfig = {};
+    var rmBtnClass = "";
+    var addBtnClass = "";
     var id = 1;
 
     parentDiv = document.getElementById("parent-div");
@@ -25,13 +27,15 @@ window.onload = (function() {
     parentDiv.appendChild(ul);
 
     function getRandomColor() {
-        var letters = '0123456789ABCDEF';
+        return "#" + Math.round(Math.random() * 0xffffff).toString(16);
+        /*var letters = '0123456789ABCDEF';
         var color = '#';
         for (var i = 0; i < 6; i++) {
           color += letters[Math.floor(Math.random() * 16)];
         }
 
         return color;
+        */
     }
 
     function generateNameAndDescription(text, id) {
@@ -41,6 +45,7 @@ window.onload = (function() {
     }
 
     function generateLi(id) {
+        var liConfig = {};
         li = document.createElement("li");
         liStructure = document.createElement("div");
         liName = document.createElement("div");
@@ -74,14 +79,12 @@ window.onload = (function() {
         liBtnAdd.style.width = "50px";
         liBtnAdd.innerHTML = "+";
         liBtnAdd.className = "add" + id;
-        addBtnEvent(liBtnAdd);
 
         liBtnRemove.style.top = "0px";
         liBtnRemove.style.height = "20px";
         liBtnRemove.style.width = "50px";
         liBtnRemove.innerHTML = "-";
         liBtnRemove.className = "remove" + id;
-        addBtnEvent(liBtnRemove);
 
         ul.appendChild(li);
         li.appendChild(liStructure);
@@ -95,34 +98,32 @@ window.onload = (function() {
         liConfig.removeBtn = liBtnRemove;
         liConfig.addBtn = liBtnAdd;
         liArray[liArray.length] = liConfig;
-        liConfig = {};
+        addBtnEvent(liConfig);
 
         return li;
     }
 
     generateLi(id);
 
-    function getIdOfClickedElement(event) {
-        removeElement(event.currentTarget.className);
-        addElement(event.currentTarget.className);
-    }
-
-    function removeElement(rmBtnClass) {
+    function removeElement(event) {
+        var element;
         for(var i = 0; i < liArray.length; i++) {
-            if(liArray[i].removeBtn.className === rmBtnClass) {
-                var element = liArray[i];
-                element.el.style.display = "none";
+            if(event.currentTarget.className === liArray[i].removeBtn.className) {
+                element = liArray[i];
+                element.removeBtn.removeEventListener("click", removeElement);
+                element.addBtn.removeEventListener("click", addElement);
+                ul.removeChild(element.el);
                 liArray.splice(i,1);
             }
         }
-
         console.log(liArray);
     }
 
-    function addElement(currentEl) {
+    function addElement(event) {
+        var element;
         for(var i = 0; i < liArray.length; i++) {
-            if(liArray[i].addBtn.className === currentEl) {
-                var element = liArray[i].el;
+            if(event.currentTarget.className === liArray[i].addBtn.className) {
+                element = liArray[i].el;
                 id++;
                 insertAfter(generateLi(id), element);
             }
@@ -131,13 +132,13 @@ window.onload = (function() {
         }
     }
 
-    function insertAfter(newEl, lastChild) {
-        lastChild.parentNode.insertBefore(newEl, lastChild.nextSibling);
+    function insertAfter(newEl, oldEl) {
+        oldEl.parentNode.insertBefore(newEl, oldEl.nextSibling);
     }
 
     function addBtnEvent(el) {
-        el.addEventListener("click", function(e) {
-            getIdOfClickedElement(e);
-        });
+        //el.addEventListener("click", getIdOfClickedElement);
+        el.addBtn.addEventListener("click", addElement);
+        el.removeBtn.addEventListener("click", removeElement);
     }
 }());

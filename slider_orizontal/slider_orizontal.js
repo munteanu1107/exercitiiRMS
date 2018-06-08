@@ -41,11 +41,12 @@ window.onload = (function() {
     getIndicatorCoord = indicator.getBoundingClientRect();
     getSliderCoord = slider.getBoundingClientRect();
 
-    var minVal = 49;
-    var maxVal = 100;
+    var minVal = 20;
+    var maxVal = 60;
     var keepMin = 0;
     var defaultVal = 0;
     var currentPos = 0;
+    var calculateCurrentVal = 0;
     var currentVal = 0;
     var initialxPos = getIndicatorCoord.x;
 
@@ -53,8 +54,8 @@ window.onload = (function() {
         keepMin = minVal;
         maxVal = maxVal + Math.abs(minVal);
         minVal = 0;
-        // setValue(5);
     }
+    // setValue(25);
 
 
     function dragIndicatorOnClick(e) {
@@ -67,12 +68,12 @@ window.onload = (function() {
 
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
-
-        function onMouseMove(e) {
-            var newXpos = (e.clientX - (indicatorWidth / 2)) - initialxPos;
+        onMouseMove(event);
+        function onMouseMove(event) {
+            var newXpos = (event.clientX - (indicatorWidth / 2)) - initialxPos;
 
             if(newXpos < minVal) {
-                newXpos = minVal;
+                newXpos = 0;
             }
 
             if(newXpos > parentDivWidth - initialxPos) {
@@ -92,28 +93,44 @@ window.onload = (function() {
     function keepRightLimit(newPos) {
         indicator.style.left = newPos + unit;
         currentPos =Math.round((newPos * 100) / (getSliderCoord.width - indicatorWidth));
-        currentVal = Math.round(keepMin + ((currentPos * maxVal) / 100));
-
+        calculateCurrentVal = Math.round(keepMin + ((maxVal - minVal) * currentPos) / 100);
+        currentVal = calculateCurrentVal + minVal
         console.log(currentPos + "%");
         console.log(currentVal);
     }
 
-    function setValue(val) {
-        maxVal < val ? val = maxVal : val;
+    // setValue(maxVal);
+    setValue(45);
 
-        if(val <= maxVal && val > 0) {
-            var getDifferenceFromRight = (val * 100) / maxVal;
-            var getLeftPosition = (getSliderCoord.width - indicatorWidth) * getDifferenceFromRight / 100
-            defaultVal = (getSliderCoord.width - indicatorWidth) - getLeftPosition;
+    function setValue(val) {
+        if(maxVal < val) {
+            val = maxVal;
         }
-        indicator.style.left = defaultVal + unit;
+
+        // IMPORTANT
+        if(val <= maxVal && val > 0) {
+            var removeMinVal = maxVal - minVal;
+            var percent = Math.round((val-minVal) * 100 / removeMinVal);
+            var pozMax = getSliderCoord.width - indicatorWidth;
+            var newPoz = percent * pozMax / 100;
+        }
+
+        indicator.style.left = newPoz + unit;
     }
 
-    slider.addEventListener("click", function(e) {
-        dragIndicatorOnClick(e)
-    });
+    slider.addEventListener("click", dragIndicatorOnClick);
 
-    indicator.addEventListener("mousedown", function(e) {
-        dragElement(e)
-    });
+    indicator.addEventListener("mousedown", dragElement);
+
+    //     var a = minVal;
+    //     var t = setInterval(function() {
+    //     setValue(a);
+    //     if (a <= maxVal) {
+    //         //console.log(a)
+    //         a++;
+    //     } else {
+    //         clearInterval(t);
+    //     }
+
+    // }, 16);
 }());
