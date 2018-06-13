@@ -8,9 +8,15 @@ window.onload = (function(){
     var lines = 15;
     var el = 30;
     var distance = 4;
+    var score = 0;
     var width = cols * (el + distance) + distance;
     var height = lines * (el + distance) + distance;
     var unit = "px";
+    var step = 0;
+    var centerLine = Math.floor(cols / 2);
+    var checkNextLevel = 0;
+    var pause = false;
+    var speedTime = 150;
 
     containerPosX = 50;
     containerPosY = 50;
@@ -20,6 +26,9 @@ window.onload = (function(){
     container.style.position = "absolute";
     container.style.left = containerPosX + unit;
     container.style.top = containerPosY + unit;
+    container.style.border = "1px solid black";
+
+    var displayScore = document.getElementById("result");
 
     function generateDivElement(element) {
         var childDiv;
@@ -38,10 +47,6 @@ window.onload = (function(){
                 childDiv.style.position = "absolute";
                 childDiv.style.left = xPos + unit;
                 childDiv.style.top = yPos + unit;
-                childDiv.style.userSelect = "none";
-                childDiv.style.willChange = "top, left"
-                childDiv.style.transform = "translateZ(0)"
-                childDiv.style.backgroundColor = "red";
 
                 generateId++;
 
@@ -57,25 +62,27 @@ window.onload = (function(){
         return matrix;
     }
 
-    generateDivElement(container)
+    generateDivElement(container);
 
-    var step = 0;
-    var centerLine = Math.floor(cols / 2);
-    function startTetris() {
+    function loopTetris() {
         var array = matrix;
-
-        if(step >= lines || array[step][centerLine].style.backgroundColor === "black") {
+        if(step == lines || array[step][centerLine].className === "black") {
             step = 0;
+            centerLine = Math.floor(cols / 2);
         }
+
         if(step > 0) {
-            array[step - 1][centerLine].style.backgroundColor = "red";
+            array[step - 1][centerLine].removeAttribute("class");
         }
-        array[step][centerLine].style.backgroundColor = "black";
+
+        document.getElementById(array[step][centerLine].id).className = "black";
+        gameOver();
 
         step++;
+        nextLevel();
     }
 
-    var timeOut = setInterval(startTetris, 500);
+    var timeOut = setInterval(loopTetris, speedTime);
 
     window.addEventListener("keydown", OnKeyPress, false);
 
@@ -83,31 +90,95 @@ window.onload = (function(){
 
         switch(event.code) {
             case "ArrowLeft":
-                matrix[step - 1][centerLine].style.backgroundColor = "red";
-                moveElementToTheLeft(matrix)
+                moveElementToTheLeft();
                 break;
             case "ArrowRight":
-                matrix[step - 1][centerLine].style.backgroundColor = "red";
-                moveElementToTheRight()
+                moveElementToTheRight();
                 break;
             case "Space":
-                pauseGame()
+                if(!pause) {
+                    pause = true;
+                    pauseGame(pause);
+                } else {
+                    pause = false;
+                    pauseGame(pause);
+                }
                 break;
         }
     }
 
-    function moveElementToTheLeft(array) {
+    function moveElementToTheLeft() {
         if(centerLine > 0) {
-            centerLine--;
+            if(matrix[step-1][centerLine-1].className !== "black" && step < lines) {
+                matrix[step-1][centerLine].removeAttribute("class");
+                centerLine--;
+            }
         }
     }
 
     function moveElementToTheRight() {
         if(centerLine < (cols-1)) {
-            centerLine++;
+            if(!matrix[step-1][centerLine+1].className && step < lines) {
+                matrix[step - 1][centerLine].removeAttribute("class");
+                centerLine++;
+            }
+        }
+    }
+
+    function pauseGame(p) {
+        if(p) {
+            clearInterval(timeOut);
+        } else {
+            timeOut = setInterval(loopTetris, speedTime);
         }
     }
 
     function nextLevel() {
+
+        if(step === lines) {
+            var x = matrix[lines-1].length;
+
+            while(x > 0) {
+                if(matrix[lines-1][x-1].className == "black") {
+                    checkNextLevel++;
+
+                    if(checkNextLevel === cols) {
+                        checkNextLevel = 0;
+                        score++;
+                        repaintElements(matrix);
+                        showScore(score);
+                    }
+                };
+
+                x--;
+            }
+            checkNextLevel = 0;
+        }
+    }
+
+    function showScore(score) {
+        displayScore.innerHTML = "Your score: " + score;
+    }
+
+    function repaintElements() {
+        for(var i = (matrix.length - 1); i > 0; i--) {
+            for(var j = 0; j < matrix[i].length; j++) {
+                if(matrix[i][j].className === "black" && i !== lines-1) {
+                    matrix[i][j].removeAttribute("class");
+                    matrix[i+1][j].className = "black";
+                } else {
+                    matrix[i][j].removeAttribute("class");
+                }
+            }
+        }
+    }
+
+    function gameOver() {
+        if(matrix[1][centerLine].className === "black" && matrix[0][centerLine].className === "black") {
+            container.innerHTML = "";
+            score = 0;
+            displayScore.innerHTML = "Your score: " + score;
+            generateDivElement(container);
+        }
     }
 }());
