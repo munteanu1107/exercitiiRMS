@@ -35,7 +35,7 @@ window.onload = (function() {
 
         if (yPos < 0) {
             yPos = ((distance) * (distance + squareHeight)) + distance;
-             rowXPos = (distance + squareWidth) / 2;
+            rowXPos = (distance + squareWidth) / 2;
         }
 
         row = document.createElement("div");
@@ -51,7 +51,7 @@ window.onload = (function() {
         if(flag) {
             createNElements(no);
         } else{
-            createNElements1(no);
+            createNElementsSecondRound(no);
         }
 
         return recursiveGenerateSquares(no - 1);
@@ -71,7 +71,7 @@ window.onload = (function() {
         return createNElements(number - 1);
     }
 
-    function createNElements1(number) {
+    function createNElementsSecondRound(number) {
 
         if (number === 0) {
             xPos = distance;
@@ -83,7 +83,7 @@ window.onload = (function() {
 
         createSquare(row, xPos);
 
-        return createNElements1(number - 1);
+        return createNElementsSecondRound(number - 1);
     }
 
     recursiveGenerateSquares(startVal);
