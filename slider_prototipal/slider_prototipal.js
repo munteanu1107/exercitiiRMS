@@ -268,5 +268,6 @@ window.onload = (function(){
         console.log(event.data.currentPosition)
         console.log(event.data.currentValue)
     }
+
     // slider.destroy()
 }());
