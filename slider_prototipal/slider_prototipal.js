@@ -22,8 +22,8 @@ window.onload = (function(){
         },
 
         fire: function(event) {
-
-            if (!event.target){
+            console.log(this)
+            if (!event.target) {
                 event.target = this;
             }
 
@@ -31,9 +31,9 @@ window.onload = (function(){
                 throw new Error("Event object missing 'type' property.");
             }
 
-            if (this._listeners && this._listeners[event.type] instanceof Array){
+            if (this._listeners && this._listeners[event.type] instanceof Array) {
                 var listeners = this._listeners[event.type];
-                for (var i=0, len=listeners.length; i < len; i++){
+                for (var i=0, len=listeners.length; i < len; i++) {
                     listeners[i].call(this, event);
                 }
             }
@@ -52,10 +52,14 @@ window.onload = (function(){
    };
 
 
-   function Slider(min, max, width) {
-       this._min = min;
-       this._max = max;
-       this._width = width;
+   function Slider(min, max, width, lineHeight, indicatorHeight) {
+        this._min = min;
+        this._max = max;
+        this._width = width;
+        this._height = this._width / 10;
+        this._indicatorHeight = indicatorHeight;
+        this._indicatorWidth = this._indicatorHeight;
+        this._lineheight = lineHeight;
 
        Object.defineProperties(this, {
            "min": {
@@ -116,8 +120,9 @@ window.onload = (function(){
                 this.setDefaultValue(defaultValue);
             }
 
+            // this.addListener("click", this.clickHandlerListener);
+            // this.addListener("mousedown", this.mouseDownListener);
             this.parentDiv.addEventListener("click", this.clickHandlerListener);
-            this.addListener("click", this.clickHandlerListener)
             this.sliderDot.addEventListener("mousedown", this.mouseDownListener);
         },
 
@@ -126,19 +131,19 @@ window.onload = (function(){
             if(!theme) {
                 this.sliderContainer.className = "slider";
             } else {
-                this.sliderContainer.className = theme
+                this.sliderContainer.className = theme;
             }
         },
 
         getParentId: function(id) {
             this.parentDiv = document.getElementById(id);
             this.parentDiv.style.width = this._width + "px";
-            this.parentDiv.style.height = this._width / 10 + "px";
+            this.parentDiv.style.height = this._height + "px";
             this.parentDiv.style.position = "relative";
             this.parentDiv.style.marginTop = "15px";
             this.parentDiv.style.marginLeft = "15px";
 
-            this.parentDiv.appendChild(this.sliderContainer)
+            this.parentDiv.appendChild(this.sliderContainer);
         },
 
         createSliderLine: function(className) {
@@ -146,8 +151,8 @@ window.onload = (function(){
             this.sliderLine.className = className;
             this.sliderLine.style.position = "absolute";
             this.sliderLine.style.width = this._width + "px";
-            this.sliderLine.style.height = 3 + "px";
-            this.sliderLine.style.top = (this._width / 10) / 2 + "px";
+            this.sliderLine.style.height = this._lineheight + "px";
+            this.sliderLine.style.top = this._height / 2 + "px";
 
             this.sliderContainer.appendChild(this.sliderLine);
         },
@@ -156,10 +161,10 @@ window.onload = (function(){
             this.sliderDot = document.createElement("div");
             this.sliderDot.className = className;
             this.sliderDot.style.position = "absolute";
-            this.sliderDot.style.height = 16 + "px";
-            this.sliderDot.style.width = 16 + "px";
+            this.sliderDot.style.height = this._indicatorHeight + "px";
+            this.sliderDot.style.width = this._indicatorWidth + "px";
             this.sliderDot.style.borderRadius = "50%";
-            this.sliderDot.style.top = (this._width / 10) / 2 - (16 / 2) + "px";
+            this.sliderDot.style.top = (this._height / 2) - (this._indicatorHeight / 2) + "px";
 
             this.sliderContainer.appendChild(this.sliderDot);
         },
@@ -174,15 +179,19 @@ window.onload = (function(){
         },
 
         moveSliderDot: function(xPos) {
-            this.newXPos = (xPos - (16 / 2)) - this.sliderDotCoord.x;
+            this.newXPos = (xPos - (this._indicatorWidth / 2)) - this.sliderDotCoord.x;
             this.keepRightLimit(this.newXPos);
         },
 
         keepRightLimit: function(newPos) {
             this.sliderDot.style.left = newPos + "px";
-            this.currentPos =Math.round((newPos * 100) / (this.sliderLineCoord.width - 16));
+            this.currentPos =Math.round((newPos * 100) / (this.sliderLineCoord.width - this._indicatorWidth));
             this.calculateCurrentVal = Math.round(this.keepMin + ((this._max - this.min) * this.currentPos) / 100);
             this.currentVal = this.calculateCurrentVal + this.min;
+            this.fire({type: "change", data:{
+                currentValue: this.currentVal,
+                currentPosition: this.currentPos
+            }});
             console.log(this.currentPos + "%");
             console.log(this.currentVal);
         },
@@ -197,17 +206,17 @@ window.onload = (function(){
         },
 
         onMouseMove: function(event) {
-            this.newXPos = (event.clientX - (16 / 2)) - this.sliderDotCoord.x;
+            this.newXPos = (event.clientX - (this._indicatorWidth / 2)) - this.sliderDotCoord.x;
 
             if(this.newXPos < this._min) {
                 this.newXPos = 0;
             }
 
             if(this.newXPos > this.sliderLineCoord.width - this.sliderDotCoord.x) {
-                this.newXPos = this.sliderLineCoord.width - 16;
+                this.newXPos = this.sliderLineCoord.width - this._indicatorWidth;
             }
 
-            this.keepRightLimit(this.newXPos)
+            this.keepRightLimit(this.newXPos);
         },
 
         onMouseUp: function() {
@@ -224,19 +233,40 @@ window.onload = (function(){
             if(val <= this._max && val > 0) {
                 this.removeMinVal = this._max - this._min;
                 this.percent = Math.round((val - this._min) * 100 / this.removeMinVal);
-                this.pozMax = this.sliderLineCoord.width - 16;
+                this.pozMax = this.sliderLineCoord.width - this._indicatorWidth;
                 this.newPoz = this.percent * this.pozMax / 100;
             }
 
             this.sliderDot.style.left = this.newPoz + "px";
+        },
+
+        destroy: function() {
+            if (this._listeners) {
+                this._listeners = [];
+            }
+
+            this.parentDiv.innerHTML = "";
+
+            this.parentDiv.removeEventListener("click", this.clickHandlerListener);
+            this.sliderDot.removeEventListener("mousedown", this.mouseDownListener);
+            document.removeEventListener("mousemove", this.mouseMoveListener);
+            document.removeEventListener("mouseup", this.mouseUpListener);
+
+            for(var x in this) {
+                delete x;
+            }
         }
 
     });
 
-    var slider = new Slider(-10, 50, 500);
+    var slider = new Slider(-10, 50, 500, 3, 16);
+    slider.createSlider("slider1", 25, "zen-slider1");
 
-    for(var i = 0; i < 5; i++) {
-        slider = new Slider(-10, 50, (i + 1) * 100);
-        slider.createSlider("slider"+ i, 25, "zen-slider" + (i+1));
+    slider.addListener("change", onHandleChange);
+
+    function onHandleChange(event) {
+        console.log(event.data.currentPosition)
+        console.log(event.data.currentValue)
     }
+    // slider.destroy()
 }());
