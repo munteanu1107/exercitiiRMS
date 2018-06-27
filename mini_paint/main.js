@@ -1,0 +1,1 @@
+import {PaintBoard} from "./paintBoard.js";
