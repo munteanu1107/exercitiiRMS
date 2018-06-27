@@ -11,19 +11,59 @@ Button.prototype = Object.create(CustomEvents.prototype);
 Object.assign(Button.prototype, {
     constructor: Button,
 
-    changeNameBtn: function(newName) {
-        this.name = newName;
-        this.btn.innerHTML = this.name;
-    },
-
     getStateBtn: function() {
         return this.selected;
     },
 
+    getNameBtn: function() {
+        return this.name;
+    },
+
+    setNameBtn: function(newName) {
+        if(newName && newName !== this.name) {
+            this.changeNameBtn(newName);
+        } else {
+            throw new Error("This name " + this.name.toUpperCase() + " already exists, use a new name!")
+        }
+    },
+
+    changeNameBtn: function(newName) {
+        this.name = newName;
+        this.btn.innerHTML = this.name;
+        this.fire({type: "changeName", data: "Button changed his name to " + this.name});
+    },
+
+
+    setEnableState: function(newState) {
+        if(newState) {
+            this.activateBtn();
+        } else {
+            this.disable();
+        }
+    },
+
+    getEnabledState: function() {
+        return this.enable;
+    },
+
     changeStateBtn: function() {
-        this.selected = !this.selected;
-        this.selected ? this.btn.className += " active" : this.btn.className = this.customClass;
-        this.fire({type: "change", data: this.selected});
+        if(this.btn.className.indexOf("disabled") === -1) {
+            this.selected = !this.selected;
+            this.selected ? this.btn.className += " active" : this.btn.className = this.customClass;
+            this.fire({type: "change", data: "Button " + this.name + " changed his status to " + this.selected});
+        }
+    },
+
+    getClassBtn: function() {
+        return this.customClass;
+    },
+
+    setClassBtn: function(newClass) {
+        if(newClass && newClass !== this.customClass) {
+            this.changeClassBtn(newClass);
+        } else {
+            throw new Error("The class " + this.customClass.toUpperCase() +" already exists!")
+        }
     },
 
     changeClassBtn: function(newClass) {
@@ -34,10 +74,11 @@ Object.assign(Button.prototype, {
 
     desabled: function() {
         this.btn.className +=" disabled";
+        this.enable = false;
         this.fire({type: "disable", data: "disabled"});
     },
 
-    enable: function() {
+    activateBtn: function() {
         this.className = this.customClass;
         this.btn.className = this.customClass;
         this.fire({type: "enable", data: "enabled"});
