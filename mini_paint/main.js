@@ -1,4 +1,4 @@
 import { PaintBoard } from './paintBoard.js';
 
-var x = new PaintBoard(50,50);
-x.drawMatrix("board");
+var x = new PaintBoard(150,150);
+x.drawBoard("board");

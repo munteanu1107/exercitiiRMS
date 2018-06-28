@@ -1,0 +1,13 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+#board {
+    position: absolute;
+}
+.pixel {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: red;
+}

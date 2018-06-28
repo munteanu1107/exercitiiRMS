@@ -1,5 +1,6 @@
-import {CustomEvents} from "./customEvents.js";
-import {Button} from "./button.js";
+import { CustomEvents } from "./customEvents.js";
+import { Button } from "./button.js";
+import { Stack } from "./stack.js";
 
 export function PaintBoard(width, height) {
     this._width = width;
@@ -30,30 +31,34 @@ Object.assign(PaintBoard.prototype, {
 
     constructor: PaintBoard,
 
-    drawMatrix: function(parentId) {
-        var cols = 5;
-        var lines = cols;
+    drawBoard: function(parentId) {
+        var cols = this._width;
+        var lines = this._height;
         var matrix = [];
+        var xPos = 4;
+        var yPos = 4;
 
 
         this.parent = document.getElementById(parentId);
 
-            for (var i = 0; i < cols; i++) {
-                matrix[i] = [];
-                var button = new Button("de schimbat clasa", false, "btn btn-primary");
+        for (var i = 0; i < cols; i++) {
+            matrix[i] = [];
+            xPos = 4;
+            var button = new Button("", false, "pixel");
 
-                if(j === cols) {
-                    var br = document.createElement("br");
-                    this.parent.appendChild(br);
-                }
+            for (var j = 0; j < lines; j++) {
+                button.createBtn(parentId);
+                button.btn.style.left = xPos + "px";
+                button.btn.style.top = yPos + "px";
 
-                for (var j = 0; j < lines; j++) {
-                    button.createBtn(parentId);
+                matrix[i][j] = button.btn;
 
-                    matrix[i][j] = button.btn;
+                xPos += 4;
 
-                    this.parent.appendChild(button.btn);
-                }
+                this.parent.appendChild(button.btn);
             }
+
+            yPos += 4;
+        }
     }
 });
