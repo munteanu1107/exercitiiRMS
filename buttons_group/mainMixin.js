@@ -1,5 +1,5 @@
-import { ButtonsGroup } from "./buttons_group.js";
-import { Button } from "./button.js";
+import { ButtonsGroupMixin } from "./buttons_groupMixin.js";
+import { ButtonMixin } from "./buttonMixin.js";
 
 var buttons = [
     {
@@ -19,10 +19,10 @@ var buttons = [
     }
 ];
 
-var btnGroupOrizontal = new ButtonsGroup(buttons, "buttons_group", "radio", "btn-group btn-group-sm");
+var btnGroupOrizontal = new ButtonsGroupMixin(buttons, "buttons_group", "radio", "btn-group btn-group-sm");
 btnGroupOrizontal.displayBtns()
 
-var btnGroupVertical = new ButtonsGroup(buttons, "buttons_group", "checkbox", "btn-group-vertical");
+var btnGroupVertical = new ButtonsGroupMixin(buttons, "buttons_group", "checkbox", "btn-group-vertical");
 btnGroupVertical.displayBtns();
 
 btnGroupOrizontal.addListener("disable", disableHandler);
@@ -46,7 +46,7 @@ function selectedBtn(event) {
 }
 
 
-// var btn = new Button("test", false, "btn btn-primary");
+// var btn = new ButtonMixin("test", false, "btn btn-primary");
 // btn.createBtn("buttons_group");
 
 // btn.addListener("changeClass", setClassHandle);

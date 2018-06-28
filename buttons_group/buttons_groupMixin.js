@@ -1,21 +1,21 @@
 import { CustomEvents } from "./custom_events.js";
-import { Button } from "./button.js";
+import { ButtonMixin } from "./buttonMixin.js";
+import { mixin } from "./mixin.js";
 
-export function ButtonsGroup (arrayOfButtons, parentDiv, btnType, classCustom) {
+export function ButtonsGroupMixin (arrayOfButtons, parentDiv, btnType, classCustom) {
     this.buttonsArray = arrayOfButtons || [];
     this.parent = parentDiv;
     this.btnType = btnType || "radio";
     this.classCustom = classCustom;
 }
 
-ButtonsGroup.prototype = Object.create(CustomEvents.prototype);
-
-Object.assign(ButtonsGroup.prototype, {
-    constructor: ButtonsGroup,
+ButtonsGroupMixin.prototype = mixin({}, CustomEvents.prototype);
+mixin(ButtonsGroupMixin.prototype, {
+    constructor: ButtonsGroupMixin,
 
     displayBtns: function() {
 
-        if(!this.buttonsArray.length){
+        if(!this.buttonsArray.length) {
             throw new Error("ButtonsGroup object missing 'buttons' array.");
         }
 
@@ -35,9 +35,9 @@ Object.assign(ButtonsGroup.prototype, {
 
         for(var i = 0; i < this.buttonsArray.length; i++) {
             if(this.buttonsArray[i].customStyle) {
-                btn = new Button(this.buttonsArray[i].name, this.buttonsArray[i].selected, this.buttonsArray[i].customStyle);
+                btn = new ButtonMixin(this.buttonsArray[i].name, this.buttonsArray[i].selected, this.buttonsArray[i].customStyle);
             } else {
-                btn = new Button(this.buttonsArray[i].name, this.buttonsArray[i].selected, this.buttonsArray[i].customStyle);
+                btn = new ButtonMixin(this.buttonsArray[i].name, this.buttonsArray[i].selected, this.buttonsArray[i].customStyle);
             }
 
             btn.createBtn(container.id);
