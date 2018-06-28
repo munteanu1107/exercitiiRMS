@@ -103,5 +103,37 @@ Object.assign(ButtonsGroup.prototype, {
         }
 
         return unselectedButtons;
+    },
+
+    setButtons: function(vector) {
+        var counter = 0;
+        for(var i = 0; i < this.arrayOfElements.length; i++) {
+            var j = vector.length - 1;
+            while(j >= 0) {
+                if(this.btnType !== "radio") {
+                    if(
+                        (this.arrayOfElements[i].name === vector[j].name) &&
+                        (this.arrayOfElements[i].selected !== vector[j].selected)
+                    ) {
+                        this.arrayOfElements[i].changeStateBtn();
+                    }
+                } else {
+                    if(
+                        (this.arrayOfElements[i].name === vector[j].name) &&
+                        (this.arrayOfElements[i].selected !== vector[j].selected) && counter == 0
+                    ) {
+                        this.arrayOfElements[i].changeStateBtn();
+                        counter++;
+                    } else if(
+                        (this.arrayOfElements[i].name === vector[j].name) &&
+                        (this.arrayOfElements[i].selected !== vector[j].selected) && counter > 0
+                    ) {
+                        this.arrayOfElements[i].selected = false;
+                    }
+                }
+
+                j--;
+            }
+        }
     }
 });

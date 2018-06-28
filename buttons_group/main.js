@@ -10,11 +10,29 @@ var buttons = [
     {
         name: "Test1",
         selected: false,
-        customStyle: "btn-custom"
+        customStyle: "btn btn-danger"
     },
     {
         name: "Test2",
         selected: false,
+        customStyle: "btn btn-success"
+    }
+];
+
+var buttonsTest = [
+    {
+        name: "Test1",
+        selected: true,
+        customStyle: "btn btn-danger"
+    },
+    {
+        name: "Test0",
+        selected: false,
+        customStyle: "btn-danger"
+    },
+    {
+        name: "Test2",
+        selected: true,
         customStyle: "btn btn-success"
     }
 ];
@@ -24,6 +42,8 @@ btnGroupOrizontal.displayBtns()
 
 var btnGroupVertical = new ButtonsGroup(buttons, "buttons_group", "checkbox", "btn-group-vertical");
 btnGroupVertical.displayBtns();
+btnGroupVertical.setButtons(buttonsTest);
+btnGroupOrizontal.setButtons(buttonsTest);
 
 btnGroupOrizontal.addListener("disable", disableHandler);
 
@@ -40,8 +60,7 @@ function disableHandler(event) {
 }
 
 function selectedBtn(event) {
-
-    console.log(event.target.getSelectedButtons());
+    // console.log(event.target.getSelectedButtons());
     // console.log(event.data)
 }
 
