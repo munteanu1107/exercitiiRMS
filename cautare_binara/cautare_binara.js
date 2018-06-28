@@ -5,6 +5,9 @@ window.onload = (function() {
         var halfPosition = Math.floor((arr.length - 1) / 2);
         var newArray;
 
+        if (array.indexOf(num) < 0) {
+            throw new Error("Number " + num + " doesn't exist in array!")
+        }
 
         if(num === arr[halfPosition]) {
             return console.log("Found " + arr[halfPosition] + " in given array!");
@@ -21,7 +24,7 @@ window.onload = (function() {
         }
     }
 
-    binarySearch(70, array, []);
+    binarySearch(23, array, []);
 }());
 
 
