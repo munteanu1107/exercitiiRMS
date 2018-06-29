@@ -93,7 +93,7 @@ Object.assign(Button.prototype, {
 
         this.clickHandler = this.changeStateBtn.bind(this);
 
-        this.btn.addEventListener("click", this.clickHandler);
+        // this.btn.addEventListener("click", this.clickHandler);
 
         this.parent.appendChild(this.btn);
     }

@@ -5,9 +5,19 @@
 #board {
     position: absolute;
 }
+
+#buttons {
+    position: absolute;
+    left: 49%;
+    bottom: 34%;
+}
 .pixel {
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: 8px;
+    height: 8px;
     background-color: red;
+}
+
+.active {
+    background-color: black;
 }

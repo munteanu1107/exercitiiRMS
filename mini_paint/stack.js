@@ -9,12 +9,13 @@ Stack.prototype = {
     constructor: Stack,
 
     push: function(item) {
-        if(this._stack.length <= this._size) {
+        if(this._stack.length < this._size) {
             this._stack.push(item);
 
             return this._stack;
         } else {
-            return this.is_full();
+           this._stack.shift();
+           this._stack.push(item);
         }
 
     },
@@ -30,7 +31,11 @@ Stack.prototype = {
     },
 
     pop: function() {
-        return this._stack.pop();
+        if(this._stack.length > 0) {
+            return this._stack.pop();
+        } else {
+            throw new Error("Stack is empty")
+        }
     },
 
     is_empty: function() {
