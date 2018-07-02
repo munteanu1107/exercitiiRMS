@@ -84,6 +84,10 @@ Object.assign(Button.prototype, {
         this.fire({type: "enable", data: "enabled"});
     },
 
+    mouseEnter: function() {
+        this.fire({type: "onMouseEnter"});
+    },
+
     createBtn: function(parentId) {
         this.parent = document.getElementById(parentId);
 
@@ -91,9 +95,8 @@ Object.assign(Button.prototype, {
         this.btn.className = this.customClass;
         this.btn.innerHTML = this.name;
 
-        this.clickHandler = this.changeStateBtn.bind(this);
-
-        // this.btn.addEventListener("click", this.clickHandler);
+        this.mouseEnterHandler = this.mouseEnter.bind(this);
+        this.btn.addEventListener("mouseenter", this.mouseEnterHandler);
 
         this.parent.appendChild(this.btn);
     }
