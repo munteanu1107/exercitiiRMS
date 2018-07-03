@@ -72,7 +72,7 @@ Object.assign(Button.prototype, {
         this.fire({type: "changeClass", data: "classChanged to: " + this.customClass});
     },
 
-    desabled: function() {
+    disabled: function() {
         this.btn.className +=" disabled";
         this.enable = false;
         this.fire({type: "disable", data: "disabled"});
