@@ -74,6 +74,7 @@ Object.assign(Button.prototype, {
 
     disabled: function() {
         this.btn.className +=" disabled";
+        this.btn.style.pointerEvents = "none";
         this.enable = false;
         this.fire({type: "disable", data: "disabled"});
     },
@@ -81,6 +82,7 @@ Object.assign(Button.prototype, {
     activateBtn: function() {
         this.className = this.customClass;
         this.btn.className = this.customClass;
+        this.btn.style.pointerEvents = "auto";
         this.fire({type: "enable", data: "enabled"});
     },
 

@@ -45,14 +45,12 @@ Object.assign(PaintBoard.prototype, {
             this.createMatrixBoard();
         } else {
             this.matrix = this.retriveFromLocalStorage;
+            this.fire({type:"localStorage", data: this.retriveFromLocalStorage})
         }
 
         this.getTargetElement = this.getElementMouseDown.bind(this);
         this.stopPaintHandler = this.stopPaint.bind(this);
         this.drawHoveredElements = this.paint.bind(this);
-        this.undoHandler = this.undo.bind(this);
-        this.redoHandler = this.redo.bind(this);
-        // this.resetHandler = this.reset.bind(this);
 
         var xPos = this.unitMeasure;
         var yPos = this.unitMeasure;
@@ -127,44 +125,20 @@ Object.assign(PaintBoard.prototype, {
     },
 
     stopPaint: function() {
-        // this._undoStack.push(this.drawnElements);
         this.fire({type: "endPaint", data: this.drawnElements});
         this.localStorage.set("myPicture", this.matrix);
         this.drawnElements = [];
-        // this._redoStack = new Stack(30);
 
         this.isMouseDown = !this.isMouseDown;
-        // this.enableBtns();
     },
 
-    undo: function() {
-        var undoElements = this._undoStack.pop();
-        this.fire({type: "undo", data: undoElements});
-        // this._redoStack.push(undoElements);
+    undoRedo: function(undoElements) {
+        // var undoElements = _undoStack.pop();
 
         for(var i = 0; i < undoElements.length; i++) {
-            if (this.elementsMatrix[parseInt(undoElements[i][0])][parseInt(undoElements[i][1])].getStateBtn()) {
-                this.elementsMatrix[parseInt(undoElements[i][0])][parseInt(undoElements[i][1])].changeStateBtn();
-                this.matrix[parseInt(undoElements[i][0])][parseInt(undoElements[i][1])] = 0;
-            }
+            this.elementsMatrix[parseInt(undoElements[i][0])][parseInt(undoElements[i][1])].changeStateBtn();
+            this.matrix[parseInt(undoElements[i][0])][parseInt(undoElements[i][1])] = 0;
         }
-        // this.disableBtns();
-        this.localStorage.set("myPicture", this.matrix);
-    },
-
-    redo: function() {
-        var redoElements = this._redoStack.pop();
-        this.fire({type: "redo", data: redoElements})
-        // this._undoStack.push(redoElements);
-
-        for(var i = 0; i < redoElements.length; i++) {
-           if (!this.elementsMatrix[parseInt(redoElements[i][0])][parseInt(redoElements[i][1])].getStateBtn()) {
-               this.elementsMatrix[parseInt(redoElements[i][0])][parseInt(redoElements[i][1])].changeStateBtn();
-               this.matrix[parseInt(redoElements[i][0])][parseInt(redoElements[i][1])] = 1;
-           }
-        }
-
-        // this.enableBtns()
         this.localStorage.set("myPicture", this.matrix);
     },
 
@@ -178,51 +152,16 @@ Object.assign(PaintBoard.prototype, {
         }
     },
 
-    removePaintFromLocalStorage: function() {
+    reset: function() {
+        for(var i = 0; i < this.matrix.length; i++) {
+            for(var j = 0; j < this.matrix[i].length; j++) {
+                this.matrix[i][j] = 0;
+
+                if (this.elementsMatrix[i][j].getStateBtn()) {
+                    this.elementsMatrix[i][j].changeStateBtn();
+                }
+            }
+        }
         this.localStorage.remove("myPicture");
-    },
-
-    // disableBtns: function() {
-    //     if(this._undoStack.is_empty()){
-    //         this.undoBtn.disabled();
-    //         this.resetBtn.disabled();
-    //         this.undoBtn.btn.removeEventListener("click", this.undoHandler);
-    //         this.resetBtn.btn.removeEventListener("click", this.resetHandler);
-    //     } else if(this._redoStack.is_empty()) {
-    //         this.redoBtn.disabled();
-    //         this.redoBtn.btn.removeEventListener("click", this.redoHandler);
-
-    //     }
-
-    // },
-
-    // enableBtns: function() {
-    //     if(!this._undoStack.is_empty()){
-    //         this.undoBtn.activateBtn();
-    //         this.redoBtn.activateBtn();
-    //         this.resetBtn.activateBtn();
-    //         this.undoBtn.btn.addEventListener("click", this.undoHandler);
-    //         this.redoBtn.btn.addEventListener("click", this.redoHandler);
-    //         this.resetBtn.btn.addEventListener("click", this.resetHandler);
-    //     }
-    // },
-
-    // reset: function() {
-
-    //     this._undoStack = new Stack(30);
-    //     this._redoStack = new Stack(30);
-    //     this.disableBtns();
-
-
-    //     for(var i = 0; i < this.matrix.length; i++) {
-    //         for(var j = 0; j < this.matrix[i].length; j++) {
-    //             this.matrix[i][j] = 0;
-
-    //             if (this.elementsMatrix[i][j].getStateBtn()) {
-    //                 this.elementsMatrix[i][j].changeStateBtn();
-    //             }
-    //         }
-    //     }
-    //     this.localStorage.remove("myPicture");
-    // }
+    }
 });
