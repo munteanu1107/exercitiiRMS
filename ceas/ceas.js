@@ -99,8 +99,8 @@ window.onload = (function(){
         var hWidth = hourWidth;
 
         for(var i = 0; i < array.length; i++) {
-            xPos = Math.round((containerWidth / 2) + (radius * Math.cos(angle)) - (hWidth / 2));
-            yPos = Math.round((containerHeight / 2) + (radius * Math.sin(angle)) - (hWidth / 2));
+            xPos = Math.round(radius + (radius * Math.cos(angle)) - (hWidth / 2));
+            yPos = Math.round(radius + (radius * Math.sin(angle)) - (hWidth / 2));
 
             array[i].style.left = xPos + unit;
             array[i].style.top = yPos + unit;
