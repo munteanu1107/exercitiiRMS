@@ -13,17 +13,14 @@ DiskGraph.prototype = {
             cy: centerY,
             r: radius,
             fill: color
-        }
+        };
 
-        var disk = this.createNode("circle", diskData);
+        var g = this.createNode("g");
+        this.disk = this.createNode("circle", diskData);
 
-        return disk;
-    },
+        g.appendChild(this.disk);
 
-    calculateSliceAngle: function() {
-        this.svgDetails = this.svg.getBoundingClientRect();
-        this.radius = this.svgDetails.width / 2;
-        this.radAngles = this.getArrayOfAngles();
+        return g;
     },
 
     getArrayOfAngles: function() {
@@ -45,4 +42,5 @@ DiskGraph.prototype = {
         return degrees * (Math.PI / 180);
     }
 };
+
 Object.assign(DiskGraph.prototype, MainGraph.prototype);

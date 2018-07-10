@@ -37,7 +37,12 @@ var chartData = {
 
         {
             "label": "Croația",
-            "percent": 9
+            "percent": 8
+        },
+
+        {
+            "label": "Romania",
+            "percent": 1
         }
     ]
 }

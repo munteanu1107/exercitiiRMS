@@ -6,11 +6,23 @@ MainGraph.prototype = {
     constructor: MainGraph,
 
     getData: function() {
-        return this._data;
+        return this.chartData;
     },
 
     getRandomColor: function() {
         return "#" + Math.round(Math.random() * 0xffffff).toString(16);
+    },
+
+    createListColor: function() {
+        var colors = [];
+        var color;
+
+        for(var i = 0; i < this.chartData.data.length; i++) {
+            color = this.getRandomColor();
+            colors.push(color);
+        }
+
+        return colors;
     },
 
     createNode: function(n, v) {
@@ -23,14 +35,10 @@ MainGraph.prototype = {
         return n;
     },
 
-    createSvgParent: function(parentId) {
+    createSvgParent: function(parentId, attrs) {
         this.parent = document.getElementById(parentId);
 
-        this.svg = this.createNode("svg", {
-            width: 500,
-            height: 500,
-            style: "background: #effbfc"
-        });
+        this.svg = this.createNode("svg", attrs);
 
         this.parent.appendChild(this.svg);
     },
@@ -59,7 +67,7 @@ MainGraph.prototype = {
     checkValidityOfPercentage: function() {
         var total = this.getTotalPercentages(this.getArrayOfPercentages(this.chartData));
 
-        if(total < 100) {
+        if(total > 100) {
             throw new Error("Your data percentage is greather than 100%");
         }
     }
