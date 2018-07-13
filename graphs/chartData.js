@@ -1,4 +1,4 @@
-var chartData = {
+var pieData = {
     "data": [
         {
             "label": "Franța ",
@@ -47,4 +47,79 @@ var chartData = {
     ]
 };
 
-export {chartData};
+var pieData2 = {
+    "data": [
+        {
+            "label": "Franța ",
+            "percent": 10
+        },
+
+        {
+            "label": "Uruguay",
+            "percent": 5
+        },
+
+        {
+            "label": "Brazilia",
+            "percent": 40
+        },
+
+        {
+            "label": "Belgia",
+            "percent": 45
+        },
+    ]
+};
+
+var pieData3 = {
+    "data": [
+        {
+            "label": "Franța ",
+            "percent": 30
+        },
+
+        {
+            "label": "Uruguay",
+            "percent": 30
+        },
+
+        {
+            "label": "Brazilia",
+            "percent": 15
+        },
+
+        {
+            "label": "Belgia",
+            "percent": 10
+        },
+
+        {
+            "label": "Suedia",
+            "percent": 10
+        },
+
+        {
+            "label": "Anglia",
+            "percent": 10
+        }
+    ]
+};
+
+var pieData4 = {
+    "data": [
+        {
+            "label": "Franța ",
+            "percent": 50
+        },
+
+        {
+            "label": "Uruguay",
+            "percent": 50
+        }
+    ]
+};
+
+
+
+
+export {pieData, pieData2, pieData3, pieData4};

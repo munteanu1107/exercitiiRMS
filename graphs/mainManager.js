@@ -1,4 +1,4 @@
-import { chartData } from "./chartData.js";
+import { pieData, pieData2, pieData3, pieData4  } from "./chartData.js";
 import { ChartFactory } from "./factory.js";
 
 var colors = ["#bd6e9a", "#ebef78", "#72f2db", "#3d44b6", "#c9b088", "#248253", "#aa09d0", "#cf083e"];
@@ -7,53 +7,28 @@ var chartFactory = new ChartFactory();
 
 var pie = chartFactory.createChart({
     type: "pie",
-    data: chartData,
-    config: {
-        parentId: "pie",
-        xPos: 250,
-        yPos: 250,
-        radius: 200,
-        legend: true,
-        colors: colors
-    }
+    data: pieData
 });
 
 var donut = chartFactory.createChart({
     type: "donut",
-    data: chartData,
-    config: {
-        parentId: "donut",
-        xPos: 250,
-        yPos: 250,
-        radius: 200,
-        secondRadius:119,
-        legend: true,
-        colors: colors
-    }
+    data: pieData2
 });
 
 var bar = chartFactory.createChart({
     type: "bar",
-    data: chartData,
-    config: {
-        parentId: "bar",
-        width: 50,
-        height: 600,
-        legend: true,
-        colors: colors
-    }
+    data: pieData3
 });
 
 var line = chartFactory.createChart({
     type: "line",
-    data: chartData,
-    config: {
-        parentId: "line",
-        height: 30,
-        width: 600,
-        legend: true,
-        colors: colors
-    }
+    data: pieData4
 });
+
+pie.render("pie", 250, 250, 200, true, colors);
+donut.render("donut", 250, 250, 200, 119, true, colors);
+bar.render("bar", 50, 600, true, colors);
+line.render("line", 30, 600, true, colors);
+
 
 pie.addCustomStyle("customPie");

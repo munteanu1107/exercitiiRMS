@@ -12,30 +12,25 @@ ChartFactory.prototype = {
     constructor: ChartFactory,
 
     createChart: function(options) {
-        var config = options.config;
         switch(options.type) {
             case "pie":
-                this.chartType = new PieChart(options.data);
-                this.chartType.render(config.parentId ,config.xPos, config.yPos, config.radius, config.legend, config.colors);
+                this.chartType = PieChart;
                 break;
 
             case "donut":
-                this.chartType = new DonutChart(options.data);
-                this.chartType.render(config.parentId, config.xPos, config.yPos, config.radius, config.secondRadius, config.legend, config.colors);
+                this.chartType = DonutChart;
                 break;
 
             case "bar":
-                this.chartType = new BarChart(options.data);
-                this.chartType.render(config.parentId, config.width, config.height, config.legend, config.colors);
+                this.chartType = BarChart;
                 break;
 
             case "line":
-                this.chartType = new LineChart(options.data);
-                this.chartType.render(config.parentId, config.height, config.width, config.legend, config.colors);
+                this.chartType = LineChart;
                 break;
         }
 
-        var chart = this.chartType;
+        var chart = new this.chartType(options.data);
 
         return chart;
     }

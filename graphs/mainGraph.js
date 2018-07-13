@@ -28,19 +28,19 @@ Object.assign(MainGraph.prototype, {
         return colors;
     },
 
-    createNode: function(n, v) {
-        n = document.createElementNS("http://www.w3.org/2000/svg", n);
+    createNode: function(el, attr) {
+        el = document.createElementNS("http://www.w3.org/2000/svg", el);
 
-        for (var p in v) {
-            n.setAttributeNS(
+        for (var key in attr) {
+            el.setAttributeNS(
                 null,
-                p.replace(/[A-Z]/g,
+                key.replace(/[A-Z]/g,
                 function(item) {
                     return "-" + item.toLowerCase(); }
-                ), v[p]);
+                ), attr[key]);
         }
 
-        return n;
+        return el;
     },
 
     createSvgParent: function(parentId, attrs) {
@@ -92,8 +92,8 @@ Object.assign(MainGraph.prototype, {
     },
 
     addCustomStyle: function(className) {
-        var $ = this.parent;
+        var el = this.parent;
 
-        $.className = className;
+        el.className = className;
     }
 });
