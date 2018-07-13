@@ -42,6 +42,7 @@ Object.assign(DonutChart.prototype,Legend.prototype, DiskGraph.prototype, {
         var path;
         var piePath;
         var title;
+        var names;
         var percentages;
         var angles;
         var startAngle = 0;
@@ -50,6 +51,7 @@ Object.assign(DonutChart.prototype,Legend.prototype, DiskGraph.prototype, {
 
 
         percentages = this.getArrayOfPercentages(this.chartData);
+        names = this.getArrayOfNameItems(this.chartData);
         angles = this.getArrayOfAngles();
 
         for(var i=0; i <angles.length; i++){
@@ -84,7 +86,7 @@ Object.assign(DonutChart.prototype,Legend.prototype, DiskGraph.prototype, {
             path = this.createNode("path", model);
             title = this.createNode("title");
 
-            title.innerHTML = percentages[i] + "%";
+            title.innerHTML = names[i] + " " + percentages[i] + "%";
             path.appendChild(title);
 
             appendTo.appendChild(path);

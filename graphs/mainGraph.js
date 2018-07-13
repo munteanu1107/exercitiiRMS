@@ -32,7 +32,12 @@ Object.assign(MainGraph.prototype, {
         n = document.createElementNS("http://www.w3.org/2000/svg", n);
 
         for (var p in v) {
-            n.setAttributeNS(null, p.replace(/[A-Z]/g, function(item) { return "-" + item.toLowerCase(); }), v[p]);
+            n.setAttributeNS(
+                null,
+                p.replace(/[A-Z]/g,
+                function(item) {
+                    return "-" + item.toLowerCase(); }
+                ), v[p]);
         }
 
         return n;
@@ -55,6 +60,17 @@ Object.assign(MainGraph.prototype, {
         });
 
         return percentages;
+    },
+
+    getArrayOfNameItems: function(obj) {
+        var names = [];
+        var getObjArr = obj.data;
+
+        getObjArr.forEach(function(item) {
+            names.push(item.label)
+        });
+
+        return names;
     },
 
     getTotalPercentages: function(percentageArray) {

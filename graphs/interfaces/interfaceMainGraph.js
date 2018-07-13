@@ -43,5 +43,9 @@ IMainGraph.prototype = {
 
     addCustomStyle: function() {
         throw new Error("ReferenceError: 'this.addCustomStyle()' is not defined" );
+    },
+
+    getArrayOfNameItems: function() {
+        throw new Error("ReferenceError: 'this.getArrayOfNameItems()' is not defined" );
     }
 }

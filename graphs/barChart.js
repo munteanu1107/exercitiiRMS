@@ -38,6 +38,7 @@ Object.assign(BarChart.prototype, RectangleGraph.prototype, Legend.prototype, {
 
     createBar: function(data, colors, width) {
         var percentages;
+        var names;
         var title;
         var xPos;
         var yPos;
@@ -45,6 +46,7 @@ Object.assign(BarChart.prototype, RectangleGraph.prototype, Legend.prototype, {
         var g;
 
         percentages = this.getArrayOfPercentages(this.chartData);
+        names = this.getArrayOfNameItems(this.chartData);
         xPos = 0;
         yPos = 0;
         g = this.createNode("g")
@@ -57,9 +59,9 @@ Object.assign(BarChart.prototype, RectangleGraph.prototype, Legend.prototype, {
             g.appendChild(rect);
             title = this.createNode("title");
 
-            title.innerHTML = percentages[i] + "%";
+            title.innerHTML = names[i] + " " + percentages[i] + "%";
             rect.appendChild(title);
-            this.svg.appendChild(g)
+            this.svg.appendChild(g);
         }
     }
 });

@@ -50,7 +50,7 @@ Object.assign(Legend.prototype, MainGraph.prototype, {
             this.svg.appendChild(text);
             this.svg.appendChild(rect);
 
-            yPos += 10 + model.height
+            yPos += 10 + model.height;
         }
     }
 });

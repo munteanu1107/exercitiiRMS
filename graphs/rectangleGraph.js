@@ -5,7 +5,7 @@ export function RectangleGraph() {
 
 }
 
-RectangleGraph.prototype = Object.create(IRectangleGraph.prototype)
+RectangleGraph.prototype = Object.create(IRectangleGraph.prototype);
 
 Object.assign(RectangleGraph.prototype, MainGraph.prototype, {
 
@@ -22,9 +22,7 @@ Object.assign(RectangleGraph.prototype, MainGraph.prototype, {
             fill: color
         };
 
-        ;
         this.rect = this.createNode("rect", rectData);
-
 
         return this.rect;
     },

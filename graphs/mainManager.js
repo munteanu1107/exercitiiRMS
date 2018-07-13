@@ -57,4 +57,3 @@ var line = chartFactory.createChart({
 });
 
 pie.addCustomStyle("customPie");
-donut.addCustomStyle("customPie");

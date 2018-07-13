@@ -45,6 +45,6 @@ var chartData = {
             "percent": 1
         }
     ]
-}
+};
 
 export {chartData};

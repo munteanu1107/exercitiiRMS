@@ -44,12 +44,14 @@ Object.assign(PieChart.prototype,Legend.prototype, DiskGraph.prototype, {
         var path;
         var title;
         var percentages;
+        var names;
         var angles;
         var startAngle = 0;
         var endAngle = 0;
         var x1,x2,y1,y2 = 0
 
         percentages = this.getArrayOfPercentages(this.chartData);
+        names = this.getArrayOfNameItems(this.chartData);
         angles = this.getArrayOfAngles();
 
         for(var i=0; i <angles.length; i++){
@@ -76,7 +78,7 @@ Object.assign(PieChart.prototype,Legend.prototype, DiskGraph.prototype, {
             path = this.createNode("path", model);
             title = this.createNode("title");
 
-            title.innerHTML = percentages[i] + "%";
+            title.innerHTML = names[i] + " " + percentages[i] + "%";
             path.appendChild(title);
 
             appendTo.appendChild(path);
