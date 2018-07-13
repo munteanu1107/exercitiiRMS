@@ -1,10 +1,14 @@
 import { MainGraph } from "./mainGraph.js";
+import { IDiskGraph } from "./interfaces/iDiskGraph.js";
 
 export function DiskGraph() {
 
 }
 
-DiskGraph.prototype = {
+DiskGraph.prototype = Object.create(IDiskGraph.prototype);
+
+Object.assign(DiskGraph.prototype, MainGraph.prototype, {
+
     constructor: DiskGraph,
 
     createDisc: function(centerX, centerY, radius, color) {
@@ -41,6 +45,4 @@ DiskGraph.prototype = {
     convertDegToRad: function (degrees) {
         return degrees * (Math.PI / 180);
     }
-};
-
-Object.assign(DiskGraph.prototype, MainGraph.prototype);
+});

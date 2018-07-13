@@ -1,14 +1,18 @@
 import { DiskGraph } from "./diskGraph.js";
 import { Legend } from "./legend.js";
+import { IDonutChart } from "./interfaces/iDonutChart.js";
 
 export function DonutChart(data) {
     this.chartData = data;
 }
 
-DonutChart.prototype = {
+DonutChart.prototype = Object.create(IDonutChart.prototype);
+
+Object.assign(DonutChart.prototype,Legend.prototype, DiskGraph.prototype, {
+
     constructor: DonutChart,
 
-    renderPie: function(originX, originY, radius, secondR, colors) {
+    render: function(parent ,originX, originY, radius, secondR, legend, colors) {
         var disk;
 
         if(!colors) {
@@ -18,17 +22,18 @@ DonutChart.prototype = {
         disk = this.createDisc(originX, originY, radius, "#e0e0e0");
 
         this.checkValidityOfPercentage();
-        this.createSvgParent("chart",{
+        this.createSvgParent(parent,{
             width: 600,
-            height: 600
+            height: 600,
+            id: "donutChart"
         });
 
         this.svg.appendChild(disk);
 
         this.createPathDonut(disk, colors, originX, originY, radius, secondR);
 
-        if(typeof this.renderLegend === "function") {
-            this.renderLegend(colors);
+        if(legend && typeof this.renderLegend === "function") {
+            this.renderLegend(parent, colors);
         }
     },
 
@@ -85,6 +90,4 @@ DonutChart.prototype = {
             appendTo.appendChild(path);
         }
     }
-}
-
-Object.assign(DonutChart.prototype,Legend.prototype, DiskGraph.prototype);
+});

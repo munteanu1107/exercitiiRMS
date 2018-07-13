@@ -1,14 +1,18 @@
 import { DiskGraph } from "./diskGraph.js";
 import { Legend } from "./legend.js";
+import { IPieChart } from "./interfaces/iPieChart.js";
 
 export function PieChart(data) {
     this.chartData = data;
 }
 
-PieChart.prototype = {
+PieChart.prototype = Object.create(IPieChart.prototype);
+
+Object.assign(PieChart.prototype,Legend.prototype, DiskGraph.prototype, {
+
     constructor: PieChart,
 
-    renderPie: function(originX, originY, radius, colors) {
+    render: function(parent, originX, originY, radius, legend, colors) {
         var disk;
 
         if(!colors) {
@@ -18,17 +22,19 @@ PieChart.prototype = {
         disk = this.createDisc(originX, originY, radius, "#e0e0e0");
 
         this.checkValidityOfPercentage();
-        this.createSvgParent("chart", {
+
+        this.createSvgParent( parent, {
             width: 600,
-            height: 600
+            height: 600,
+            id: "pieChart"
         });
 
         this.svg.appendChild(disk);
 
         this.createPath(disk, colors, originX, originY, radius);
 
-        if(typeof this.renderLegend === "function") {
-            this.renderLegend(colors);
+        if(legend && typeof this.renderLegend === "function") {
+            this.renderLegend(parent, colors);
         }
     },
 
@@ -76,6 +82,4 @@ PieChart.prototype = {
             appendTo.appendChild(path);
         }
     }
-}
-
-Object.assign(PieChart.prototype,Legend.prototype, DiskGraph.prototype);
+});

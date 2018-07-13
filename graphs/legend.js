@@ -1,17 +1,24 @@
 import { MainGraph } from "./mainGraph.js";
+import { ILegend } from "./interfaces/iLegend.js";
 
 export function Legend() {
 
 }
 
-Legend.prototype = {
+Legend.prototype = Object.create(ILegend.prototype)
+
+Object.assign(Legend.prototype, MainGraph.prototype, {
+
     constructor: Legend,
 
-    renderLegend: function(colors) {
-        this.createSvgParent("chart", {
+    renderLegend: function(parent, colors) {
+
+        this.createSvgParent(parent, {
             width: 200,
-            height: 300
+            height: 300,
+            id: parent + "Legend"
         });
+
         var rect;
         var model;
         var text;
@@ -46,6 +53,4 @@ Legend.prototype = {
             yPos += 10 + model.height
         }
     }
-}
-
-Object.assign(Legend.prototype, MainGraph.prototype);
+});

@@ -1,8 +1,11 @@
+import { IMainGraph } from "./interfaces/interfaceMainGraph.js";
+
 export function MainGraph() {
 
 }
+MainGraph.prototype = Object.create(IMainGraph.prototype);
 
-MainGraph.prototype = {
+Object.assign(MainGraph.prototype, {
     constructor: MainGraph,
 
     getData: function() {
@@ -40,7 +43,7 @@ MainGraph.prototype = {
 
         this.svg = this.createNode("svg", attrs);
 
-        this.parent.appendChild(this.svg);
+        return this.parent.appendChild(this.svg);
     },
 
     getArrayOfPercentages: function(obj) {
@@ -70,5 +73,11 @@ MainGraph.prototype = {
         if(total > 100) {
             throw new Error("Your data percentage is greather than 100%");
         }
+    },
+
+    addCustomStyle: function(className) {
+        var $ = this.parent;
+
+        $.className = className;
     }
-}
+});
