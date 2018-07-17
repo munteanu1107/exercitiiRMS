@@ -10,7 +10,7 @@ CustomEvents.prototype = {
             this._listeners = [];
         }
 
-        if (typeof this._listeners[type] == "undefined"){
+        if (typeof this._listeners[type] == "undefined") {
             this._listeners[type] = [];
         }
 

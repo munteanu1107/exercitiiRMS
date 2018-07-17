@@ -1,82 +1,27 @@
-import { Board } from "./board.js"
-import { IMainShape } from "./interfaces/i_mainShape.js"
+import { Shape } from "./shape.js";
+import { CustomEvents } from "./custom_events.js";
+import { Resize } from "./resize.js";
 
 export function MainShape() {
 
 }
 
-MainShape.prototype = Object.create(IMainShape.prototype);
+MainShape.prototype = Object.create(CustomEvents.prototype);
 
-Object.assign(MainShape.prototype, Board.prototype, {
+Object.assign(MainShape.prototype, Resize.prototype, {
     constructor: MainShape,
 
-    createElement: function(config, callback) {
-        var g;
-        var text;
-        var rect;
-        var line;
+    render: function(parent, config) {
 
-        line = this.createNode("line", {
-            x1: 0,
-            y1: config.y,
-            x2: this.svg.clientWidth,
-            y2: config.y,
-            stroke: "red"
-        });
+        this.clickHandler = this.resize.bind(this);
 
-        this.group.appendChild(line);
-``
-        for(var i = 0; i < config.els; i++) {
+        for(var i = 0; i < config.elements; i++) {
+            var shape = new Shape(parent, config.width, config.height, config.x, config.y, config.distance, i);
 
-            line = this.createNode("line", {
-                x1: 0,
-                y1: config.y + config.height,
-                x2: this.svg.clientWidth,
-                y2: config.y + config.height,
-                stroke: "red"
-            })
-
-            g = this.createNode("g", {
-                id: i + 1,
-                width: config.width,
-                height: config.height,
-                x: config.x,
-                y: config.y,
-                fill: "#23abba"
-            });
-
-            text = this.createNode("text", {
-                x: config.x + config.height,
-                y: config.y + (config.height / 2),
-                fill: "black"
-            });
-
-            rect = this.createNode("rect", {
-                id: i,
-                width: config.width,
-                height: config.height,
-                x: config.x,
-                y: config.y,
-                rx: config.borderRadius,
-                ry: config.borderRadius,
-                fill: "#23abba"
-            });
-
-            text.innerHTML = "Shape " + (i +1);
             config.y += (config.height + config.distance);
             config.width -= config.height;
-
-            g.appendChild(rect);
-            g.appendChild(text);
-
-            if(callback) {
-                this.clickHandler = callback.bind(this);
-                g.addEventListener("click", this.clickHandler);
-            }
-
-            this.group.appendChild(line);
-            this.group.appendChild(g);
-            this.elements.push(rect);
+            shape.render()
+            shape.addListener("clicked", this.clickHandler);
         }
     }
 });

@@ -1,13 +1,25 @@
-import { IBoard } from "./interfaces/i_board.js"
+import { CustomEvents } from "./custom_events.js";
+
 
 export function Board() {
 
 }
 
-Board.prototype = Object.create(IBoard.prototype);
+Board.prototype = Object.create(CustomEvents.prototype);
 
 Object.assign(Board.prototype, {
     constructor: Board,
+
+    render: function(parentId) {
+        this.parent = document.getElementById(parentId);
+        this.svg = this.createNode("svg", {
+            id: "mainSvg",
+            width: 1500,
+            height: 1000
+        });
+
+        return this.parent.appendChild(this.svg);
+    },
 
     createNode: function(el, attr) {
         el = document.createElementNS("http://www.w3.org/2000/svg", el);
@@ -25,32 +37,7 @@ Object.assign(Board.prototype, {
         return el;
     },
 
-    createSvgParent: function(parentId, attrs) {
-        this.parent = document.getElementById(parentId);
-
-        this.svg = this.createNode("svg", attrs);
-
-        return this.parent.appendChild(this.svg);
-    },
-
-    createStructure: function(width, height) {
-        this.group;
-        this.elements = [];
-
-        this.createSvgParent("main", {
-            width: width,
-            height: height,
-            id: "mainSvg"
-        });
-
-        this.svg.addEventListener("click", function(e) {
-            if(e.target.id === "mainSvg") {
-                document.getElementById("resize").remove()
-            }
-        });
-
-        this.group = this.createNode("g");
-
-        this.svg.appendChild(this.group);
+    getParent: function() {
+        return this.svg;
     }
 });
