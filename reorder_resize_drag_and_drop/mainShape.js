@@ -12,16 +12,16 @@ Object.assign(MainShape.prototype, Resize.prototype, {
     constructor: MainShape,
 
     render: function(parent, config) {
-
-        this.clickHandler = this.resize.bind(this);
+        this.list = [];
+        // this.clickHandler = this.resize.bind(this);
 
         for(var i = 0; i < config.elements; i++) {
             var shape = new Shape(parent, config.width, config.height, config.x, config.y, config.distance, i);
 
             config.y += (config.height + config.distance);
             config.width -= config.height;
-            shape.render()
-            shape.addListener("clicked", this.clickHandler);
+            shape.render();
+            // shape.addListener("clicked", this.clickHandler);
         }
     }
 });

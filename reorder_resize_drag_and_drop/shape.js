@@ -52,6 +52,10 @@ Object.assign(Shape.prototype, {
 
     },
 
+    setWidth: function(val) {
+        this._width = val;
+    },
+
     onClickElement: function () {
         this.fire({ type: "clicked" });
     },
