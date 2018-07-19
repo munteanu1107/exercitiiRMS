@@ -10,7 +10,7 @@ Board.prototype = Object.create(CustomEvents.prototype);
 Object.assign(Board.prototype, {
     constructor: Board,
 
-    render: function(parentId) {
+    initBoard: function(parentId) {
         this.parent = document.getElementById(parentId);
         this.svg = this.createNode("svg", {
             id: "mainSvg",
@@ -35,6 +35,34 @@ Object.assign(Board.prototype, {
         }
 
         return el;
+    },
+
+    createGroupNode: function(append, attrs) {
+        append = document.getElementById(append);
+        var mainGroup = this.createNode("g", attrs);
+
+        return append.appendChild(mainGroup);
+    },
+
+    createTextNode: function(append, attrs) {
+        append = document.getElementById(append);
+        var textNode = this.createNode("text", attrs);
+
+        return append.appendChild(textNode);
+    },
+
+    createRectNode: function(append, attrs) {
+        append = document.getElementById(append);
+        var rect = this.createNode("rect", attrs);
+
+        return append.appendChild(rect);
+    },
+
+    createLineNode: function(append, attrs) {
+        append = document.getElementById(append);
+        var line = this.createNode("line", attrs);
+
+        return append.appendChild(line);
     },
 
     getParent: function() {

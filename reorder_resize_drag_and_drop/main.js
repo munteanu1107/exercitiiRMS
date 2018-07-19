@@ -1,18 +1,16 @@
-import { Board } from "./board.js";
+import { Shape } from "./shape.js";
 import { MainShape } from "./mainShape.js";
 
-
-var board = new Board();
-board.render("main");
-
-var mainShape = new MainShape();
-mainShape.render("mainSvg", {
-    elements: 5,
-    x: 100,
-    y: 80,
+var data = {
+    parent: "mainSvg",
     width: 800,
     height: 50,
+    x: 100,
+    y: 80,
     distance: 10
-});
+};
 
-console.log(mainShape)
+var shapeManager = new MainShape();
+shapeManager.init(5, data)
+
+console.log(shapeManager)

@@ -1,4 +1,5 @@
 import { CustomEvents } from "./custom_events.js";
+import { DragAndDrop } from "./dragAndDrop.js";
 
 export function Connector(width, height) {
     this._connectorWidth = width;
@@ -7,7 +8,7 @@ export function Connector(width, height) {
 
 Connector.prototype = Object.create(CustomEvents.prototype);
 
-Object.assign(Connector.prototype, {
+Object.assign(Connector.prototype, DragAndDrop.prototype, {
     constructor: Connector,
 
     leftConnector: function(parent, x, y, height) {
@@ -23,12 +24,9 @@ Object.assign(Connector.prototype, {
             fill: "black"
         };
 
-        this.mouseDownHandler = this.getElementOnMouseDown.bind(this);
+        var leftConnectorEl = this.createRectNode(parent, result);
 
-        this.leftConnectorEl = this.createRectNode(parent, result);
-        this.leftConnectorEl.addEventListener("mousedown", this.mouseDownHandler);
-
-        return this.leftConnectorEl;
+        return leftConnectorEl;
     },
 
     topConnector: function (parent, x, y, width) {
@@ -44,17 +42,16 @@ Object.assign(Connector.prototype, {
             fill: "black"
         };
 
-        this.mouseDownHandler = this.getElementOnMouseDown.bind(this);
 
-        this.topConnectorEl = this.createRectNode(parent, result);
-        this.topConnectorEl.addEventListener("mousedown", this.mouseDownHandler);
+        var topConnectorEl = this.createRectNode(parent, result);
 
-        return this.topConnectorEl;
+        return topConnectorEl;
     },
 
     rightConnector: function (parent, x, y, width, height) {
         var xPos = x + width - (this._connectorWidth / 2);
         var yPos = y + (height / 2) - (this._connectorHeight / 2);
+
 
         var result = {
             id: "right",
@@ -65,15 +62,12 @@ Object.assign(Connector.prototype, {
             fill: "black"
         };
 
-        this.mouseDownHandler = this.getElementOnMouseDown.bind(this);
-        this.mouseMoveHandler = this.getDataOnMouseMove.bind(this);
-        this.mouseUpHandler = this.mouseUp.bind(this);
+        this.sendConnectorHandler = this.sendConnector.bind(this);
 
-        this.rightConnectorEl = this.createRectNode(parent, result);
-        this.rightConnectorEl.addEventListener("mousedown", this.mouseDownHandler);
-        document.addEventListener("mouseup", this.mouseUpHandler);
+        var rightConnectorEl = this.createRectNode(parent, result);
+        rightConnectorEl.addEventListener("mousedown", this.sendConnectorHandler);
 
-        return this.rightConnectorEl;
+        return rightConnectorEl;
     },
 
     bottomConnector: function (parent, x, y, width, height) {
@@ -89,54 +83,56 @@ Object.assign(Connector.prototype, {
             fill: "black"
         };
 
-        this.mouseDownHandler = this.getElementOnMouseDown.bind(this);
+        var bottomConnectorEl = this.createRectNode(parent, result);
 
-        this.bottomConnectorEl = this.createRectNode(parent, result);
-        this.bottomConnectorEl.addEventListener("mousedown", this.mouseDownHandler);
 
-        return this.bottomConnectorEl;
+        return bottomConnectorEl;
     },
 
-    getElementOnMouseDown: function(evt) {
-        evt.preventDefault();
-        this.selected = evt.target;
-        this.selected.style.position = "absolute";
-
-        document.addEventListener("mousemove", this.mouseMoveHandler);
-
-        this.fire({type: "mousePresed", data: this.selected});
+    sendConnector: function(connector) {
+        this.fire({type: "getConnector", data: connector.target})
     },
 
-    getDataOnMouseMove: function(data) {
-        switch (this.selected.id) {
-            case "right":
-                this.resizeRight(data.clientX);
-                break;
-            case "left":
-                this.resizeLeft(data.clientX);
-                break;
-            case "top":
-                this.resizeTop(data.clientX);
-                break;
-            case "bottom":
-                this.resizeBottom(data.clientX);
-                break;
-        }
-    },
+    // getElementOnMouseDown: function(evt) {
+    //     evt.preventDefault();
+    //     this.selected = evt.target;
+    //     this.selected.style.position = "absolute";
 
-    resizeRight: function(data) {
-        this.rightConnectorEl.setAttribute("x", data - this._connectorWidth);
-        this.fire({type:"mouseMove", data: this.rightConnectorEl});
-    },
+    //     document.addEventListener("mousemove", this.mouseMoveHandler);
 
-    resizeLeft: function(data) {
-        this.leftConnectorEl.setAttribute("x", (data - this._connectorWidth));
-        this.fire({type:"mouseMove", data: this.leftConnectorEl});
-    },
+    //     this.fire({type: "mousePresed", data: this.selected});
+    // },
 
-    mouseUp: function() {
-        document.removeEventListener("mousemove", this.mouseMoveHandler);
-    },
+    // getDataOnMouseMove: function(data) {
+    //     switch (this.selected.id) {
+    //         case "right":
+    //             this.resizeRight(data.clientX);
+    //             break;
+    //         case "left":
+    //             this.resizeLeft(data.clientX);
+    //             break;
+    //         case "top":
+    //             this.resizeTop(data.clientX);
+    //             break;
+    //         case "bottom":
+    //             this.resizeBottom(data.clientX);
+    //             break;
+    //     }
+    // },
+
+    // resizeRight: function(data) {
+    //     this.rightConnectorEl.setAttribute("x", data - this._connectorWidth);
+    //     this.fire({type:"mouseMove", data: this.rightConnectorEl});
+    // },
+
+    // resizeLeft: function(data) {
+    //     this.leftConnectorEl.setAttribute("x", (data - this._connectorWidth));
+    //     this.fire({type:"mouseMove", data: this.leftConnectorEl});
+    // },
+
+    // mouseUp: function() {
+    //     document.removeEventListener("mousemove", this.mouseMoveHandler);
+    // },
 
     createRectNode: function (append, attrs) {
         append = document.getElementById(append);
