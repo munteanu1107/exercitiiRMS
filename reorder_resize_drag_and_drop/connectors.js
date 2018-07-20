@@ -1,138 +1,71 @@
 import { CustomEvents } from "./custom_events.js";
 import { DragAndDrop } from "./dragAndDrop.js";
 
-export function Connector(width, height) {
-    this._connectorWidth = width;
-    this._connectorHeight = height;
+export function Point(parent, width, height, xPos, yPos, l) {
+    this._parent = parent;
+    this._width = width;
+    this._height = height;
+    this._xPos = xPos;
+    this._yPos = yPos;
+    this._dimension = l
 }
 
-Connector.prototype = Object.create(CustomEvents.prototype);
+Point.prototype = Object.create(CustomEvents.prototype);
 
-Object.assign(Connector.prototype, DragAndDrop.prototype, {
-    constructor: Connector,
+Object.assign(Point.prototype, DragAndDrop.prototype, {
+    constructor: Point,
 
-    leftConnector: function(parent, x, y, height) {
-        var xPos = x - (this._connectorWidth / 2);
-        var yPos = y + (height / 2) - (this._connectorHeight / 2);
+    initResizePoint: function(dragOrientation) {
+        var result = this.setResizablePointData()
 
-        var result = {
-            id: "left",
-            width: this._connectorWidth,
-            height: this._connectorHeight,
-            x: xPos,
-            y: yPos,
-            fill: "black"
+        this.element = this.createRectNode(this._parent, result);
+
+        this.initDrag();
+
+        this.startDrag = function(evt) {
+            evt.preventDefault();
+            var elementBoundingRect = evt.target.getBBox();
+
+            this.shiftX = evt.clientX - elementBoundingRect.x;
+            this.shiftY = evt.clientY - elementBoundingRect.y;
+
+            evt.target.style.position = "absolute";
         };
 
-        var leftConnectorEl = this.createRectNode(parent, result);
+        this.mouseMove = function(evt) {
 
-        return leftConnectorEl;
-    },
+            var yPos = evt.pageY - this.shiftY;
+            var xPos = evt.pageX - this.shiftX;
 
-    topConnector: function (parent, x, y, width) {
-        var xPos = x + (width / 2) - (this._connectorWidth / 2);
-        var yPos = y - (this._connectorHeight / 2);
+            switch (dragOrientation) {
+                case "vertical":
+                    this.element.setAttribute("y", yPos);
+                    break;
+                case "horizontal":
+                    this.element.setAttribute("x", xPos);
+                    break;
+                default:
+                    this.element.setAttribute("y", yPos);
+                    this.element.setAttribute("x", xPos);
+                    break;
+            }
 
-        var result = {
-            id: "top",
-            width: this._connectorWidth,
-            height: this._connectorHeight,
-            x: xPos,
-            y: yPos,
-            fill: "black"
+            this.fire({type: "pointerClicked", data: this.element})
         };
 
-
-        var topConnectorEl = this.createRectNode(parent, result);
-
-        return topConnectorEl;
+        return this.element;
     },
 
-    rightConnector: function (parent, x, y, width, height) {
-        var xPos = x + width - (this._connectorWidth / 2);
-        var yPos = y + (height / 2) - (this._connectorHeight / 2);
 
-
-        var result = {
-            id: "right",
-            width: this._connectorWidth,
-            height: this._connectorHeight,
-            x: xPos,
-            y: yPos,
-            fill: "black"
-        };
-
-        this.sendConnectorHandler = this.sendConnector.bind(this);
-
-        var rightConnectorEl = this.createRectNode(parent, result);
-        rightConnectorEl.addEventListener("mousedown", this.sendConnectorHandler);
-
-        return rightConnectorEl;
+    setPointerLimit: function(currentPos, limitVal) {
+        if(currentPos <= limitVal) {
+            return;
+        }
     },
 
-    bottomConnector: function (parent, x, y, width, height) {
-        var xPos = x + (width / 2) - (this._connectorWidth / 2);
-        var yPos = y + height - (this._connectorHeight / 2);
-
-        var result = {
-            id: "bottom",
-            width: this._connectorWidth,
-            height: this._connectorHeight,
-            x: xPos,
-            y: yPos,
-            fill: "black"
-        };
-
-        var bottomConnectorEl = this.createRectNode(parent, result);
-
-
-        return bottomConnectorEl;
+    setResizablePointData: function() {
+        throw new Error("This function must be overwritten");
     },
-
-    sendConnector: function(connector) {
-        this.fire({type: "getConnector", data: connector.target})
-    },
-
-    // getElementOnMouseDown: function(evt) {
-    //     evt.preventDefault();
-    //     this.selected = evt.target;
-    //     this.selected.style.position = "absolute";
-
-    //     document.addEventListener("mousemove", this.mouseMoveHandler);
-
-    //     this.fire({type: "mousePresed", data: this.selected});
-    // },
-
-    // getDataOnMouseMove: function(data) {
-    //     switch (this.selected.id) {
-    //         case "right":
-    //             this.resizeRight(data.clientX);
-    //             break;
-    //         case "left":
-    //             this.resizeLeft(data.clientX);
-    //             break;
-    //         case "top":
-    //             this.resizeTop(data.clientX);
-    //             break;
-    //         case "bottom":
-    //             this.resizeBottom(data.clientX);
-    //             break;
-    //     }
-    // },
-
-    // resizeRight: function(data) {
-    //     this.rightConnectorEl.setAttribute("x", data - this._connectorWidth);
-    //     this.fire({type:"mouseMove", data: this.rightConnectorEl});
-    // },
-
-    // resizeLeft: function(data) {
-    //     this.leftConnectorEl.setAttribute("x", (data - this._connectorWidth));
-    //     this.fire({type:"mouseMove", data: this.leftConnectorEl});
-    // },
-
-    // mouseUp: function() {
-    //     document.removeEventListener("mousemove", this.mouseMoveHandler);
-    // },
 
     createRectNode: function (append, attrs) {
         append = document.getElementById(append);

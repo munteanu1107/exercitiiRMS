@@ -32,7 +32,7 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
             stroke: "red"
         });
 
-        this.rowRect = this.createRectNode("row" + this._index, {
+        this.element = this.createRectNode("row" + this._index, {
             id: this._index,
             width: this._width,
             height: this._height,
@@ -41,13 +41,27 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
             fill: "#23abba"
         });
 
-        this.clickHandler = this.onClickElement.bind(this);
-        this.rowRect.addEventListener("click", this.clickHandler);
+        this.initDrag();
 
-    },
+        this.startDrag = function(evt) {
+            evt.preventDefault();
+            var elementBoundingRect = evt.target.getBBox();
 
-    onClickElement: function (event) {
-        this.fire({ type: "mousePresed", data: event.target});
+            this.initResize(this.element)
+            this.shiftX = evt.clientX - elementBoundingRect.x;
+            this.shiftY = evt.clientY - elementBoundingRect.y;
+
+            evt.target.style.position = "absolute";
+        };
+
+        this.mouseMove = function(evt) {
+            var yPos = evt.pageY - this.shiftY;
+
+            this.element.setAttribute("y", yPos);
+            this.setYpos(yPos);
+            this.initResize(this.element);
+        };
+
     },
 
     setWidth: function(val) {
@@ -88,5 +102,21 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
 
     getDistance: function() {
         return this._distance;
+    },
+
+    setShapeWidth: function(val) {
+        this.element.setAttribute("width", val);
+    },
+
+    getShapeWidth: function() {
+        return parseInt(this.element.getAttribute("width"));
+    },
+
+    setShapeHeight: function(val) {
+        this.element.setAttribute("height", val);
+    },
+
+    getShapeHeight: function() {
+        return parseInt(this.element.getAttribute("height"));
     }
 });
