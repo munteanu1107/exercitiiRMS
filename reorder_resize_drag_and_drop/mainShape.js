@@ -1,12 +1,6 @@
-import {
-    Shape
-} from "./shape.js";
-import {
-    CustomEvents
-} from "./custom_events.js";
-import {
-    Board
-} from "./board.js";
+import { Shape } from "./shape.js";
+import { CustomEvents } from "./custom_events.js";
+import { Board } from "./board.js";
 
 export function MainShape() {
 
@@ -33,9 +27,6 @@ Object.assign(MainShape.prototype, Board.prototype, {
             config.width -= config.height;
 
             shape.render();
-            shape.addListener("mouseIsDown", this.mouseDownHandler);
-            shape.addListener("mousePresed", this.mousePresedHandler);
-
             this.list.push(shape)
         }
     }

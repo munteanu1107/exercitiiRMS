@@ -16,9 +16,10 @@ Object.assign(Point.prototype, DragAndDrop.prototype, {
     constructor: Point,
 
     initResizePoint: function(dragOrientation) {
-        var result = this.setResizablePointData()
+        console.log(this._width)
+        this.result = this.setResizablePointData();
 
-        this.element = this.createRectNode(this._parent, result);
+        this.element = this.createRectNode(this._parent, this.result);
 
         this.initDrag();
 
@@ -54,13 +55,6 @@ Object.assign(Point.prototype, DragAndDrop.prototype, {
         };
 
         return this.element;
-    },
-
-
-    setPointerLimit: function(currentPos, limitVal) {
-        if(currentPos <= limitVal) {
-            return;
-        }
     },
 
     setResizablePointData: function() {

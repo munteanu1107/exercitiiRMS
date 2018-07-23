@@ -103,6 +103,9 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
     getDistance: function() {
         return this._distance;
     },
+    setShapeXpos: function(val) {
+        this.element.setAttribute("x", val);
+    },
 
     setShapeWidth: function(val) {
         this.element.setAttribute("width", val);
