@@ -29,19 +29,20 @@ Object.assign(DragAndDrop.prototype, {
     },
 
     onMouseUp: function(e) {
-        this.mouseUp(e)
+        document.removeEventListener("mouseup", this.onMouseUpHandler);
+        document.removeEventListener("mousemove", this.mouseMoveHandler);
+        this.stopDrag(e);
     },
 
     startDrag: function() {
         throw("this function must be overwritten");
     },
 
-
     mouseMove: function() {
         throw("this function must be overwritten");
     },
 
-    mouseUp: function() {
-        document.removeEventListener("mousemove", this.mouseMoveHandler)
+    stopDrag: function() {
+        throw("this function must be overwritten");
     }
 });

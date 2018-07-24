@@ -6,9 +6,13 @@ import { Resize } from "./resize.js";
 export function Shape(parent, width, height, x, y, distance, index) {
     this._parent = parent;
     this._width = width;
+    this._constWidth = width;
     this._height = height;
+    this._constHeight = height;
     this._xPos = x;
+    this._constXPos = x;
     this._yPos = y;
+    this._constYPos = y;
     this._distance = distance;
     this._index = index;
 };
@@ -62,6 +66,10 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
             this.initResize(this.element);
         };
 
+        this.stopDrag = function(evt) {
+            return
+        }
+
     },
 
     setWidth: function(val) {
@@ -104,22 +112,24 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
         return this._distance;
     },
     setShapeXpos: function(val) {
+        // this.setXpos(val);
+
         this.element.setAttribute("x", val);
     },
 
     setShapeWidth: function(val) {
+        // this.setWidth(val);
+
         this.element.setAttribute("width", val);
     },
 
-    getShapeWidth: function() {
-        return parseInt(this.element.getAttribute("width"));
-    },
-
     setShapeHeight: function(val) {
+        this.setHeight(val)
+
         this.element.setAttribute("height", val);
     },
 
-    getShapeHeight: function() {
-        return parseInt(this.element.getAttribute("height"));
+    updateWidthConstant: function() {
+        this._constWidth = this._width;
     }
 });

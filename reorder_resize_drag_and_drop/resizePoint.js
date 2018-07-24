@@ -16,15 +16,14 @@ Object.assign(Point.prototype, DragAndDrop.prototype, {
     constructor: Point,
 
     initResizePoint: function(dragOrientation) {
-        console.log(this._width)
-        this.result = this.setResizablePointData();
+        // this.result = this.setResizablePointData();
 
         this.element = this.createRectNode(this._parent, this.result);
 
         this.initDrag();
 
         this.startDrag = function(evt) {
-            evt.preventDefault();
+            // evt.preventDefault();
             var elementBoundingRect = evt.target.getBBox();
 
             this.shiftX = evt.clientX - elementBoundingRect.x;
@@ -34,7 +33,6 @@ Object.assign(Point.prototype, DragAndDrop.prototype, {
         };
 
         this.mouseMove = function(evt) {
-
             var yPos = evt.pageY - this.shiftY;
             var xPos = evt.pageX - this.shiftX;
 
@@ -51,14 +49,35 @@ Object.assign(Point.prototype, DragAndDrop.prototype, {
                     break;
             }
 
-            this.fire({type: "pointerClicked", data: this.element})
+            this.fire({type: "pointerClicked", data: this.element});
         };
+
+        this.stopDrag = function(evt) {
+            this.fire({type: "onMouseUp", data: this.element})
+        }
 
         return this.element;
     },
 
     setResizablePointData: function() {
         throw new Error("This function must be overwritten");
+    },
+
+    setResizablePosition: function(x, y) {
+        this.element.setAttribute("x", x);
+        this.element.setAttribute("y", y);
+    },
+
+    configResizePoint: function(config) {
+        for (var key in config) {
+            this.element.setAttributeNS(
+                null,
+                key.replace(/[A-Z]/g,
+                    function (item) {
+                        return "-" + item.toLowerCase();
+                    }), config[key]
+            );
+        }
     },
 
     createRectNode: function (append, attrs) {
