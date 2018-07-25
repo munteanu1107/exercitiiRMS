@@ -29,6 +29,7 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
         this.row = this.createGroupNode("mainGroup", { id: "row" + this._index });
 
         this.line = this.createLineNode("mainGroup", {
+            id: "line" + this._index,
             x1: 0,
             y1: this._yPos,
             x2: parentDetails.width,
@@ -44,6 +45,8 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
             y: this._yPos,
             fill: "#23abba"
         });
+        this.element.style.cursor = "all-scroll"
+
 
         this.initDrag();
 
@@ -88,10 +91,6 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
         this._yPos = val;
     },
 
-    setDistance: function(val) {
-        this._distance = val;
-    },
-
     getWidth: function() {
         return this._width;
     },
@@ -112,13 +111,19 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
         return this._distance;
     },
     setShapeXpos: function(val) {
-        // this.setXpos(val);
+        this.setXpos(val);
 
         this.element.setAttribute("x", val);
     },
 
+    setShapeYpos: function(val) {
+        this.setYpos(val);
+
+        this.element.setAttribute("y", val);
+    },
+
     setShapeWidth: function(val) {
-        // this.setWidth(val);
+        this.setWidth(val);
 
         this.element.setAttribute("width", val);
     },
