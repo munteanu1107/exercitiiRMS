@@ -1,5 +1,6 @@
 import { Point } from "./resizePoint.js";
 import { CustomEvents } from "./custom_events.js";
+// import { MainShape } from "./mainShape.js";
 
 export function Resize() {};
 
@@ -15,6 +16,8 @@ Object.assign(Resize.prototype, {
         this.removeResizableRect(element);
 
         this.pointerMoveHandler = this.onClickPointer.bind(this);
+        this.stopResizeHandler = this.stopResize.bind(this);
+        this.resizePointStarDragHandler = this.resizePointStarDrag.bind(this);
 
         this.resizableGroup = this.createGroupNode(this.row.id, {
             id: "resizeGroup"
@@ -40,15 +43,20 @@ Object.assign(Resize.prototype, {
         this.rightPoint = new Point(this.pointersGroup.id, mainRow.width, mainRow.height, mainRow.x, mainRow.y, 10);
         this.bottomPoint = new Point(this.pointersGroup.id, mainRow.width, mainRow.height, mainRow.x, mainRow.y, 10);
 
-        this.leftPoint.addListener("startDrag", this.resizePointStarDrag.bind(this));
-        this.rightPoint.addListener("startDrag", this.resizePointStarDrag.bind(this));
-        this.bottomPoint.addListener("startDrag", this.resizePointStarDrag.bind(this));
-        this.topPoint.addListener("startDrag", this.resizePointStarDrag.bind(this));
+        this.leftPoint.addListener("startDrag", this.resizePointStarDragHandler);
+        this.rightPoint.addListener("startDrag", this.resizePointStarDragHandler);
+        this.bottomPoint.addListener("startDrag", this.resizePointStarDragHandler);
+        this.topPoint.addListener("startDrag", this.resizePointStarDragHandler);
 
         this.leftPoint.addListener("pointerMove", this.pointerMoveHandler);
         this.topPoint.addListener("pointerMove", this.pointerMoveHandler);
         this.rightPoint.addListener("pointerMove", this.pointerMoveHandler);
         this.bottomPoint.addListener("pointerMove", this.pointerMoveHandler);
+
+        this.leftPoint.addListener("stopResize", this.stopResizeHandler);
+        this.topPoint.addListener("stopResize", this.stopResizeHandler);
+        this.rightPoint.addListener("stopResize", this.stopResizeHandler);
+        this.bottomPoint.addListener("stopResize", this.stopResizeHandler);
 
         this.leftPoint.initResizePoint("horizontal");
         this.topPoint.initResizePoint("vertical");
@@ -230,4 +238,8 @@ Object.assign(Resize.prototype, {
             domEl.remove()
         }
     },
+
+    stopResize: function(evt) {
+        this.fire({type:"resized", data: evt})
+    }
 });

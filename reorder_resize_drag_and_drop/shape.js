@@ -6,13 +6,9 @@ import { Resize } from "./resize.js";
 export function Shape(parent, width, height, x, y, distance, index) {
     this._parent = parent;
     this._width = width;
-    this._constWidth = width;
     this._height = height;
-    this._constHeight = height;
     this._xPos = x;
-    this._constXPos = x;
     this._yPos = y;
-    this._constYPos = y;
     this._distance = distance;
     this._index = index;
 };
@@ -24,18 +20,7 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
 
     render: function() {
 
-        var parentDetails = document.getElementById(this._parent).getBoundingClientRect();
-
         this.row = this.createGroupNode("mainGroup", { id: "row" + this._index });
-
-        this.line = this.createLineNode("mainGroup", {
-            id: "line" + this._index,
-            x1: 0,
-            y1: this._yPos,
-            x2: parentDetails.width,
-            y2: this._yPos,
-            stroke: "red"
-        });
 
         this.element = this.createRectNode("row" + this._index, {
             id: this._index,
@@ -45,18 +30,17 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
             y: this._yPos,
             fill: "#23abba"
         });
-        this.element.style.cursor = "all-scroll"
 
+        this.element.style.cursor = "all-scroll";
 
         this.initDrag();
 
         this.startDrag = function(evt) {
-            evt.preventDefault();
-            var elementBoundingRect = evt.target.getBBox();
+            this.elementBoundingRect = evt.target.getBBox();
 
             this.initResize(this.element)
-            this.shiftX = evt.clientX - elementBoundingRect.x;
-            this.shiftY = evt.clientY - elementBoundingRect.y;
+            this.shiftX = evt.clientX - this.elementBoundingRect.x;
+            this.shiftY = evt.clientY - this.elementBoundingRect.y;
 
             evt.target.style.position = "absolute";
         };
@@ -67,6 +51,7 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
             this.element.setAttribute("y", yPos);
             this.setYpos(yPos);
             this.initResize(this.element);
+            this.fire({type: "reorder"});
         };
 
         this.stopDrag = function(evt) {
@@ -110,6 +95,11 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
     getDistance: function() {
         return this._distance;
     },
+
+    setDistance: function(val) {
+        this._distance = val;
+    },
+
     setShapeXpos: function(val) {
         this.setXpos(val);
 

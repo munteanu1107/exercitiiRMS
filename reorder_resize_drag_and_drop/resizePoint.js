@@ -21,37 +21,18 @@ Object.assign(Point.prototype, DragAndDrop.prototype, {
         this.initDrag();
 
         this.startDrag = function(evt) {
-            // evt.target.style.position = "absolute";
-            // var elementBoundingRect = evt.target.getBBox();
-
-            // this.shiftX = evt.clientX - elementBoundingRect.x;
-            // this.shiftY = evt.clientY - elementBoundingRect.y;
 
             this.fire({type: "startDrag", el: this.element});
-
         };
 
         this.mouseMove = function(evt) {
-            // this.yPos = evt.pageY - this.shiftY;
-            // this.xPos = evt.pageX - this.shiftX;
 
-            // switch (dragOrientation) {
-            //     case "vertical":
-            //         this.element.setAttribute("y", this.yPos);
-            //         break;
-            //     case "horizontal":
-            //         this.element.setAttribute("x", this.xPos);
-            //         break;
-            //     default:
-            //         this.element.setAttribute("y", this.yPos);
-            //         this.element.setAttribute("x", this.xPos);
-            //         break;
-            // }
-
-            this.fire({type: "pointerMove", data: { el: this.element, mouseEvent: evt}} );
+            this.fire({type: "pointerMove", data: { el: this.element, mouseEvent: evt}});
         };
 
-        this.stopDrag = function(evt) {};
+        this.stopDrag = function(evt) {
+            this.fire({ type: "stopResize", data: { el: this.element, mouseEvent: evt}});
+        };
 
         return this.element;
     },
