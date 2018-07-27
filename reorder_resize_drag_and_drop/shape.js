@@ -43,6 +43,8 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
             this.shiftY = evt.clientY - this.elementBoundingRect.y;
 
             evt.target.style.position = "absolute";
+
+            this.fire({type: "startReorder", data: evt});
         };
 
         this.mouseMove = function(evt) {
@@ -51,11 +53,12 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
             this.element.setAttribute("y", yPos);
             this.setYpos(yPos);
             this.initResize(this.element);
-            this.fire({type: "reorder"});
+
+            this.fire({type: "checkMousePos", data: evt});
         };
 
         this.stopDrag = function(evt) {
-            return
+            this.fire({type: "dropShape", data: evt});
         }
 
     },

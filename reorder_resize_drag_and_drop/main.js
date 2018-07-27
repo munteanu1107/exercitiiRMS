@@ -7,7 +7,7 @@ var data = {
     height: 50,
     x: 100,
     y: 80,
-    distance: 20
+    distance: 40
 };
 
 var shapeManager = new MainShape();
