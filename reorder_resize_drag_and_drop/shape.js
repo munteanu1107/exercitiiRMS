@@ -31,6 +31,15 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
             fill: "#23abba"
         });
 
+        // this.text = this.createNode("text", {
+        //     x: this._xPos,
+        //     y: this._yPos + 20,
+        // });
+
+        // this.text.innerHTML = this._index;
+        // this.text.style.userSelect = "none"
+        // this.row.appendChild(this.text)
+
         this.element.style.cursor = "all-scroll";
 
         this.initDrag();

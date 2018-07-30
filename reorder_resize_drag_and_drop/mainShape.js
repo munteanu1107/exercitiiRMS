@@ -47,89 +47,135 @@ Object.assign(MainShape.prototype, Board.prototype, {
         }
     },
 
+    reorder: function(array, evt) {
+        this.mainGroup.innerHTML = "";
+        this.line = this.createLineNode("mainGroup", {
+            id: "separator",
+            x1: -9999,
+            y1: -9999,
+            x2: -9999,
+            y2: -9999,
+            stroke: "red"
+        });
+
+        for(var i = 0; i < array.length; i++) {
+            array[i].row.id = i
+            array[i].element.id = i
+            array[i].setShapeYpos(this.intervals[i].y2)
+            this.mainGroup.appendChild(array[i].row)
+        };
+
+        evt.target.initResize(evt.target.element)
+    },
+
     startReorder: function() {
         this.intervals = [];
-        var coords = {};
+        var coords;
 
         var firstVirtualRect = {
-
             y1: this.listOfShapes[0].element.getBBox().y - this.listOfShapes[0].element.getBBox().height,
-            y2: this.listOfShapes[0].element.getBBox().y
+            y2: this.listOfShapes[0].element.getBBox().y,
+            index: 0
         }
-        this.intervals.push(firstVirtualRect)
-        for(var i = 0; i < this.listOfShapes.length; i++) {
 
-            var element = this.listOfShapes[i].element;
+        this.intervals.push(firstVirtualRect);
+
+        for(var i = 0; i < this.listOfShapes.length; i++) {
             var interval1 = this.listOfShapes[i].element.getBBox().y + this.listOfShapes[i].element.getBBox().height;
             var interval2 = this.listOfShapes[i + 1] ? this.listOfShapes[i + 1].element.getBBox().y : this.listOfShapes[i].element.getBBox().y + (this.listOfShapes[i].element.getBBox().height * 2);
 
-
+            coords = {};
             coords.y1 = interval1;
             coords.y2 = interval2;
+            coords.index = i + 1;
+
             this.intervals.push(coords);
-            coords = {};
         }
-        console.log(this.intervals)
     },
 
     checkMousePosAndDrawLine: function(evt) {
         var selectedElementId = parseInt(evt.target.element.id);
         this.curentMousePosition = evt.data.clientY;
+        var selectedElementId = parseInt(evt.target.element.id);
+        var selectedI = -1;
 
         for(var i = 0; i < this.intervals.length; i++) {
             if(i !== selectedElementId && i !== (selectedElementId + 1)) {
-                this.flag = this.is_inside(this.curentMousePosition, this.intervals[i].y1, this.intervals[i].y2);
-
-                if(this.flag) {
-
-                    this.sendDataForDrop = {
-                        y1: this.intervals[i].y1,
-                        y2: this.intervals[i].y2,
-                        elToBeChanged: selectedElementId + 1
-                    }
-
-                    this.line.setAttribute("x1", 0);
-                    this.line.setAttribute("x2", 9999);
-                    this.line.setAttribute("y1", this.intervals[i].y2 - (evt.target._distance / 2));
-                    this.line.setAttribute("y2", this.intervals[i].y2 - (evt.target._distance / 2));
-                }
+                this.flag = this.is_inside(this.curentMousePosition, this.intervals[i].y1, this.intervals[i].y2, selectedElementId);
             }
+
+            if (this.flag) {
+                selectedI = i;
+            }
+        }
+
+        if(selectedI >= 0) {
+            this.reorderFlag = true;
+            this.drawLine( this.intervals[selectedI].y2, evt)
+        } else {
+            this.reorderFlag = false;
+            this.drawLine()
         }
     },
 
     dropShape: function(evt) {
-        this.line.setAttribute("x1", 9999);
-        this.line.setAttribute("x2", 9999);
-        this.line.setAttribute("y1", 9999);
-        this.line.setAttribute("y2", 9999);
+        this.drawLine()
 
         var selectedElement = evt.target.element;
-        var selectedElementId = parseInt(evt.target.element.id);
         this.curentMousePosition = evt.data.clientY;
 
-        console.log(this.flag)
-        if(this.flag) {
-            console.log(this.sendDataForDrop)
+        if(this.reorderFlag) {
+            for(var i = 0; i < this.listOfShapes.length; i++) {
+                if(parseInt(this.listOfShapes[i].element.id) === this.sendDataForDrop.elToBeChanged) {
+                    var splicedShape = this.listOfShapes.splice(parseInt(this.listOfShapes[i].element.id), 1);
+                }
+            }
+
+            for(var j = 0; j < this.intervals.length; j++) {
+                if(this.sendDataForDrop.y2 === this.intervals[j].y2) {
+                    this.listOfShapes.splice(this.intervals[j].index - 1, 0, splicedShape[0]);
+                    this.reorder(this.listOfShapes, evt);
+                }
+            }
+
+            this.reorderFlag = false
+
         } else {
             selectedElement.id = selectedElement.id;
-            selectedElement.setAttribute("y", evt.target.elementBoundingRect.y)
+            evt.target.setShapeYpos(evt.target.elementBoundingRect.y)
             evt.target.initResize(evt.target.element)
-        }
-
-        for(var i = 0; i < this.intervals.length; i++) {
         }
     },
 
-    is_inside: function (mousePos, y1, y2) {
+    is_inside: function (mousePos, y1, y2, selectedElementId) {
         var mouseYpos = mousePos;
         var yPos1 = y1;
-        var yPos2 = y2
-        // var rect2 = el2.getBoundingClientRect();
+        var yPos2 = y2;
 
-        return (
-          ((yPos1 <= mouseYpos) && (mouseYpos <= yPos2))
-        );
+        if((yPos1 <= mouseYpos) && (mouseYpos <= yPos2)) {
+            this.sendDataForDrop = {
+                y1: yPos1,
+                y2: yPos2,
+                elToBeChanged: selectedElementId
+            }
+            return true;
+        } else {
+            return false
+        }
+    },
 
+    drawLine: function(yPos, evt) {
+        if(yPos) {
+            this.line.setAttribute("x1", 0);
+            this.line.setAttribute("x2", 9999);
+            this.line.setAttribute("y1", yPos - (evt.target._distance / 2));
+            this.line.setAttribute("y2", yPos - (evt.target._distance / 2));
+        } else {
+            this.line.setAttribute("x1", 9999);
+            this.line.setAttribute("x2", 9999);
+            this.line.setAttribute("y1", 9999);
+            this.line.setAttribute("y2", 9999);
+        }
     },
 
     resized: function(evt) {
@@ -172,19 +218,3 @@ Object.assign(MainShape.prototype, Board.prototype, {
         }
     }
 });
-
-// collideBottom: function(el1, el2) {
-    //     el1 = el1.getBBox();
-    //     el2 = el2.getBBox();
-
-    //     if (el1.y >= el2.y && el2.y >= el1.y) {
-    //         this.line.setAttribute("x1", 0);
-    //         this.line.setAttribute("x2", 9999);
-    //         this.line.setAttribute("y1", el2.y + el2.height + 10);
-    //         this.line.setAttribute("y2", el2.y + el2.height + 10);
-
-    //         return true;
-    //     } else {
-    //        return false
-    //     }
-    // },
