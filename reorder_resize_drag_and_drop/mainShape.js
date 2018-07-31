@@ -40,35 +40,27 @@ Object.assign(MainShape.prototype, Board.prototype, {
 
             shape.render();
             shape.addListener("resized", this.resized.bind(this));
-            shape.addListener("startReorder", this.startReorder.bind(this));
+            // shape.addListener("startReorder", this.startReorder.bind(this));
             shape.addListener("checkMousePos", this.checkMousePosAndDrawLine.bind(this));
             shape.addListener("dropShape", this.dropShape.bind(this));
             this.listOfShapes.push(shape)
         }
     },
 
-    reorder: function(array, evt) {
-        this.mainGroup.innerHTML = "";
-        this.line = this.createLineNode("mainGroup", {
-            id: "separator",
-            x1: -9999,
-            y1: -9999,
-            x2: -9999,
-            y2: -9999,
-            stroke: "red"
-        });
+    positionElements: function(array, evt) {
+        var nY = 80;
 
         for(var i = 0; i < array.length; i++) {
-            array[i].row.id = i
-            array[i].element.id = i
-            array[i].setShapeYpos(this.intervals[i].y2)
-            this.mainGroup.appendChild(array[i].row)
+            array[i].setShapeYpos(nY);
+            nY += array[i].getHeight() + array[i].getDistance();
+            this.mainGroup.appendChild(array[i].row);
         };
 
-        evt.target.initResize(evt.target.element)
+        this.determineVirualBands(evt);
+        evt.target.initResize(evt.target.element);
     },
 
-    startReorder: function() {
+    determineVirualBands: function(evt) {
         this.intervals = [];
         var coords;
 
@@ -76,33 +68,35 @@ Object.assign(MainShape.prototype, Board.prototype, {
             y1: this.listOfShapes[0].element.getBBox().y - this.listOfShapes[0].element.getBBox().height,
             y2: this.listOfShapes[0].element.getBBox().y,
             index: 0
-        }
+        };
 
         this.intervals.push(firstVirtualRect);
 
         for(var i = 0; i < this.listOfShapes.length; i++) {
-            var interval1 = this.listOfShapes[i].element.getBBox().y + this.listOfShapes[i].element.getBBox().height;
-            var interval2 = this.listOfShapes[i + 1] ? this.listOfShapes[i + 1].element.getBBox().y : this.listOfShapes[i].element.getBBox().y + (this.listOfShapes[i].element.getBBox().height * 2);
+            var currentEl = this.listOfShapes[i].element.getBBox();
+
+            var interval1 = currentEl.y + currentEl.height;
+            var interval2 = interval1 + evt.target.getDistance();
 
             coords = {};
             coords.y1 = interval1;
             coords.y2 = interval2;
-            coords.index = i + 1;
+            coords.index = i;
 
             this.intervals.push(coords);
         }
     },
 
     checkMousePosAndDrawLine: function(evt) {
-        var selectedElementId = parseInt(evt.target.element.id);
-        this.curentMousePosition = evt.data.clientY;
+        this.determineVirualBands(evt);
+
+        var curentMousePosition = evt.data.clientY;
         var selectedElementId = parseInt(evt.target.element.id);
         var selectedI = -1;
 
         for(var i = 0; i < this.intervals.length; i++) {
-            if(i !== selectedElementId && i !== (selectedElementId + 1)) {
-                this.flag = this.is_inside(this.curentMousePosition, this.intervals[i].y1, this.intervals[i].y2, selectedElementId);
-            }
+
+            this.flag = this.is_inside(curentMousePosition, this.intervals[i].y1, this.intervals[i].y2, selectedElementId);
 
             if (this.flag) {
                 selectedI = i;
@@ -111,40 +105,34 @@ Object.assign(MainShape.prototype, Board.prototype, {
 
         if(selectedI >= 0) {
             this.reorderFlag = true;
-            this.drawLine( this.intervals[selectedI].y2, evt)
+            this.drawLine( this.intervals[selectedI].y2, evt);
         } else {
             this.reorderFlag = false;
-            this.drawLine()
+            this.drawLine();
         }
     },
 
     dropShape: function(evt) {
-        this.drawLine()
-
-        var selectedElement = evt.target.element;
-        this.curentMousePosition = evt.data.clientY;
+        this.drawLine();
 
         if(this.reorderFlag) {
             for(var i = 0; i < this.listOfShapes.length; i++) {
                 if(parseInt(this.listOfShapes[i].element.id) === this.sendDataForDrop.elToBeChanged) {
-                    var splicedShape = this.listOfShapes.splice(parseInt(this.listOfShapes[i].element.id), 1);
+                    var splicedShape = this.listOfShapes.splice(i, 1);
                 }
             }
 
             for(var j = 0; j < this.intervals.length; j++) {
                 if(this.sendDataForDrop.y2 === this.intervals[j].y2) {
-                    this.listOfShapes.splice(this.intervals[j].index - 1, 0, splicedShape[0]);
-                    this.reorder(this.listOfShapes, evt);
+                    this.listOfShapes.splice(this.intervals[j].index, 0, splicedShape[0]);
                 }
             }
 
-            this.reorderFlag = false
-
-        } else {
-            selectedElement.id = selectedElement.id;
-            evt.target.setShapeYpos(evt.target.elementBoundingRect.y)
-            evt.target.initResize(evt.target.element)
+            this.positionElements(this.listOfShapes, evt);
+            this.reorderFlag = false;
         }
+
+        this.positionElements(this.listOfShapes, evt);
     },
 
     is_inside: function (mousePos, y1, y2, selectedElementId) {
@@ -179,42 +167,22 @@ Object.assign(MainShape.prototype, Board.prototype, {
     },
 
     resized: function(evt) {
-        var pointer = evt.data.data.el.id;
-        var resizedEl = evt.target.element;
-        var resizedElBoundingBox = evt.target.element.getBBox();
-        var resizedElInitHeight = evt.target.shapeBBox.height;
-        var distanceToUpdate = resizedElBoundingBox.height - resizedElInitHeight;
-
-        var resizedElInitPosY = evt.target.shapeBBox.y;
-        var positionToUpdate = resizedElBoundingBox.y - resizedElInitPosY;
-
-        if(pointer === "bottomPoint") {
-            this.updateDistanceBottom(resizedEl, distanceToUpdate);
-        }
-
-        if(pointer === "topPoint") {
-            this.updateDistanceTop(resizedEl, positionToUpdate, resizedElInitPosY);
-            evt.target.initResize(evt.target.element);
-        }
-    },
-
-    updateDistanceBottom: function(resizedEl, distance) {
-        for(var i = 0; i < this.listOfShapes.length; i++) {
-            if(parseInt(this.listOfShapes[i].element.id) > parseInt(resizedEl.id)) {
-                var newYpos = this.listOfShapes[i].element.getBBox().y + distance;
-
-                this.listOfShapes[i].element.setAttribute("y", newYpos)
-            }
-        }
-    },
-
-    updateDistanceTop: function(resizedEl, distance) {
-        for(var i = 0; i < this.listOfShapes.length; i++) {
-            var newYpos = this.listOfShapes[i].element.getBBox().y - distance;
-
-            if(parseInt(this.listOfShapes[i].element.id) >= parseInt(resizedEl.id)) {
-                this.listOfShapes[i].element.setAttribute("y", newYpos)
-            }
-        }
+        this.positionElements(this.listOfShapes, evt);
     }
 });
+
+// function reorder(el, pos) {
+//     var arr = [1,2,3,6,4,8,9,7,5,0];
+//     var keepEl;
+
+//     if(arr.indexOf(el) !== 0) {
+//         var index = arr.indexOf(el);
+//         keepEl = arr.splice(index,1);
+//         console.log(arr.indexOf(el))
+//     }
+
+//     arr.splice(pos, 0, keepEl[0]);
+//     console.log(arr)
+// }
+
+// reorder(3,9)

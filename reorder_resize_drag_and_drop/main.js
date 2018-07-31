@@ -11,6 +11,6 @@ var data = {
 };
 
 var shapeManager = new MainShape();
-shapeManager.init(5, data)
+shapeManager.init(6, data)
 
 console.log(shapeManager)
