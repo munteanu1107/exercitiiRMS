@@ -1,9 +1,6 @@
 import { CustomEvents } from "./custom_events.js";
 
-
-export function Board() {
-
-}
+export function Board() {}
 
 Board.prototype = Object.create(CustomEvents.prototype);
 

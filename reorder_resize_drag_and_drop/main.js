@@ -1,4 +1,3 @@
-import { Shape } from "./shape.js";
 import { MainShape } from "./mainShape.js";
 
 var data = {
@@ -11,6 +10,4 @@ var data = {
 };
 
 var shapeManager = new MainShape();
-shapeManager.init(6, data)
-
-console.log(shapeManager)
+shapeManager.init(6, data);

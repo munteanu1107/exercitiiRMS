@@ -13,7 +13,7 @@ Object.assign(MainShape.prototype, Board.prototype, {
 
     init: function (elements, config) {
         this.initBoard("main");
-
+        this.startPos = config.y;
         this.mainGroup = this.createGroupNode(config.parent, {
             id: "mainGroup"
         });
@@ -27,7 +27,7 @@ Object.assign(MainShape.prototype, Board.prototype, {
             stroke: "red"
         });
 
-        this.createShape(elements, config)
+        this.createShape(elements, config);
     },
 
     createShape: function(elements, config) {
@@ -40,19 +40,20 @@ Object.assign(MainShape.prototype, Board.prototype, {
 
             shape.render();
             shape.addListener("resized", this.resized.bind(this));
-            // shape.addListener("startReorder", this.startReorder.bind(this));
             shape.addListener("checkMousePos", this.checkMousePosAndDrawLine.bind(this));
             shape.addListener("dropShape", this.dropShape.bind(this));
-            this.listOfShapes.push(shape)
+            this.listOfShapes.push(shape);
         }
     },
 
     positionElements: function(array, evt) {
-        var nY = 80;
+        var distance = this.startPos;
 
         for(var i = 0; i < array.length; i++) {
-            array[i].setShapeYpos(nY);
-            nY += array[i].getHeight() + array[i].getDistance();
+            array[i].row.id = "row" + i;
+            array[i].element.id = i;
+            array[i].setShapeYpos(distance);
+            distance += array[i].getHeight() + array[i].getDistance();
             this.mainGroup.appendChild(array[i].row);
         };
 
@@ -62,28 +63,29 @@ Object.assign(MainShape.prototype, Board.prototype, {
 
     determineVirualBands: function(evt) {
         this.intervals = [];
-        var coords;
+        var firstStrip;
+        var strips;
 
-        var firstVirtualRect = {
+        firstStrip = {
             y1: this.listOfShapes[0].element.getBBox().y - this.listOfShapes[0].element.getBBox().height,
             y2: this.listOfShapes[0].element.getBBox().y,
             index: 0
         };
 
-        this.intervals.push(firstVirtualRect);
+        this.intervals.push(firstStrip);
 
         for(var i = 0; i < this.listOfShapes.length; i++) {
-            var currentEl = this.listOfShapes[i].element.getBBox();
+            var currentElement = this.listOfShapes[i].element.getBBox();
 
-            var interval1 = currentEl.y + currentEl.height;
+            var interval1 = currentElement.y + currentElement.height;
             var interval2 = interval1 + evt.target.getDistance();
 
-            coords = {};
-            coords.y1 = interval1;
-            coords.y2 = interval2;
-            coords.index = i;
+            strips = {};
+            strips.y1 = interval1;
+            strips.y2 = interval2;
+            strips.index = i + 1;
 
-            this.intervals.push(coords);
+            this.intervals.push(strips);
         }
     },
 
@@ -92,20 +94,21 @@ Object.assign(MainShape.prototype, Board.prototype, {
 
         var curentMousePosition = evt.data.clientY;
         var selectedElementId = parseInt(evt.target.element.id);
-        var selectedI = -1;
+        var selectedIndex = -1;
 
         for(var i = 0; i < this.intervals.length; i++) {
-
-            this.flag = this.is_inside(curentMousePosition, this.intervals[i].y1, this.intervals[i].y2, selectedElementId);
+            if((i-1) !== selectedElementId && i !== selectedElementId) {
+                this.flag = this.is_inside(curentMousePosition, this.intervals[i].y1, this.intervals[i].y2, selectedElementId);
+            }
 
             if (this.flag) {
-                selectedI = i;
+                selectedIndex = i;
             }
         }
 
-        if(selectedI >= 0) {
+        if(selectedIndex >= 0) {
             this.reorderFlag = true;
-            this.drawLine( this.intervals[selectedI].y2, evt);
+            this.drawLine( this.intervals[selectedIndex].y1, evt);
         } else {
             this.reorderFlag = false;
             this.drawLine();
@@ -115,20 +118,35 @@ Object.assign(MainShape.prototype, Board.prototype, {
     dropShape: function(evt) {
         this.drawLine();
 
+        var curentMousePosition = evt.data.clientY;
+        var selectedElementId = parseInt(evt.target.element.id);
+        var selectedIndex = -1;
+        var indexPosInArray;
+
         if(this.reorderFlag) {
+            for(var i = 0; i < this.intervals.length; i++) {
+                if((i-1) !== selectedElementId) {
+                    var isInsideBand = this.is_inside(curentMousePosition, this.intervals[i].y1, this.intervals[i].y2, selectedElementId);
+                }
+
+                if (isInsideBand) {
+                    selectedIndex = i;
+                }
+            }
+
             for(var i = 0; i < this.listOfShapes.length; i++) {
                 if(parseInt(this.listOfShapes[i].element.id) === this.sendDataForDrop.elToBeChanged) {
                     var splicedShape = this.listOfShapes.splice(i, 1);
+                    indexPosInArray = i;
                 }
             }
 
-            for(var j = 0; j < this.intervals.length; j++) {
-                if(this.sendDataForDrop.y2 === this.intervals[j].y2) {
-                    this.listOfShapes.splice(this.intervals[j].index, 0, splicedShape[0]);
-                }
+            if(selectedIndex > indexPosInArray) {
+                this.listOfShapes.splice(selectedIndex - 1, 0, splicedShape[0]);
+            } else {
+                this.listOfShapes.splice(selectedIndex, 0, splicedShape[0]);
             }
 
-            this.positionElements(this.listOfShapes, evt);
             this.reorderFlag = false;
         }
 
@@ -141,23 +159,25 @@ Object.assign(MainShape.prototype, Board.prototype, {
         var yPos2 = y2;
 
         if((yPos1 <= mouseYpos) && (mouseYpos <= yPos2)) {
+
             this.sendDataForDrop = {
                 y1: yPos1,
                 y2: yPos2,
                 elToBeChanged: selectedElementId
             }
+
             return true;
         } else {
             return false
         }
     },
 
-    drawLine: function(yPos, evt) {
+    drawLine: function(yPos) {
         if(yPos) {
             this.line.setAttribute("x1", 0);
             this.line.setAttribute("x2", 9999);
-            this.line.setAttribute("y1", yPos - (evt.target._distance / 2));
-            this.line.setAttribute("y2", yPos - (evt.target._distance / 2));
+            this.line.setAttribute("y1", yPos);
+            this.line.setAttribute("y2", yPos);
         } else {
             this.line.setAttribute("x1", 9999);
             this.line.setAttribute("x2", 9999);
@@ -170,19 +190,3 @@ Object.assign(MainShape.prototype, Board.prototype, {
         this.positionElements(this.listOfShapes, evt);
     }
 });
-
-// function reorder(el, pos) {
-//     var arr = [1,2,3,6,4,8,9,7,5,0];
-//     var keepEl;
-
-//     if(arr.indexOf(el) !== 0) {
-//         var index = arr.indexOf(el);
-//         keepEl = arr.splice(index,1);
-//         console.log(arr.indexOf(el))
-//     }
-
-//     arr.splice(pos, 0, keepEl[0]);
-//     console.log(arr)
-// }
-
-// reorder(3,9)

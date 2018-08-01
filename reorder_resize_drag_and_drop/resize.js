@@ -1,6 +1,5 @@
 import { Point } from "./resizePoint.js";
 import { CustomEvents } from "./custom_events.js";
-// import { MainShape } from "./mainShape.js";
 
 export function Resize() {};
 
@@ -15,6 +14,7 @@ Object.assign(Resize.prototype, {
 
         this.removeResizableRect(element);
 
+        // Handlers
         this.pointerMoveHandler = this.onClickPointer.bind(this);
         this.stopResizeHandler = this.stopResize.bind(this);
         this.resizePointStarDragHandler = this.resizePointStarDrag.bind(this);
@@ -22,7 +22,6 @@ Object.assign(Resize.prototype, {
         this.resizableGroup = this.createGroupNode(this.row.id, {
             id: "resizeGroup"
         });
-
 
         this.resizableRow = this.createRectNode(this.resizableGroup.id, {
             id: "resize",
@@ -38,30 +37,26 @@ Object.assign(Resize.prototype, {
             id: "pointersGroup"
         });
 
-        this.leftPoint = new Point(this.pointersGroup.id, mainRow.width, mainRow.height, mainRow.x, mainRow.y, 10);
-        this.topPoint = new Point(this.pointersGroup.id, mainRow.width, mainRow.height, mainRow.x, mainRow.y, 10);
-        this.rightPoint = new Point(this.pointersGroup.id, mainRow.width, mainRow.height, mainRow.x, mainRow.y, 10);
-        this.bottomPoint = new Point(this.pointersGroup.id, mainRow.width, mainRow.height, mainRow.x, mainRow.y, 10);
+        var points = [];
 
-        this.leftPoint.addListener("startDrag", this.resizePointStarDragHandler);
-        this.rightPoint.addListener("startDrag", this.resizePointStarDragHandler);
-        this.bottomPoint.addListener("startDrag", this.resizePointStarDragHandler);
-        this.topPoint.addListener("startDrag", this.resizePointStarDragHandler);
+        for(var i = 0; i < 4; i++) {
+            var point = new Point(this.pointersGroup.id, mainRow.width, mainRow.height, mainRow.x, mainRow.y, 10);
+            point.addListener("startDrag", this.resizePointStarDragHandler);
+            point.addListener("pointerMove", this.pointerMoveHandler);
+            point.addListener("stopResize", this.stopResizeHandler);
 
-        this.leftPoint.addListener("pointerMove", this.pointerMoveHandler);
-        this.topPoint.addListener("pointerMove", this.pointerMoveHandler);
-        this.rightPoint.addListener("pointerMove", this.pointerMoveHandler);
-        this.bottomPoint.addListener("pointerMove", this.pointerMoveHandler);
+            points.push(point)
+        }
 
-        this.leftPoint.addListener("stopResize", this.stopResizeHandler);
-        this.topPoint.addListener("stopResize", this.stopResizeHandler);
-        this.rightPoint.addListener("stopResize", this.stopResizeHandler);
-        this.bottomPoint.addListener("stopResize", this.stopResizeHandler);
+        this.leftPoint = points[0];
+        this.topPoint = points[1];
+        this.rightPoint = points[2];
+        this.bottomPoint = points[3];
 
-        this.leftPoint.initResizePoint("horizontal");
-        this.topPoint.initResizePoint("vertical");
-        this.rightPoint.initResizePoint("horizontal");
-        this.bottomPoint.initResizePoint("vertical");
+        this.leftPoint.initResizePoint();
+        this.topPoint.initResizePoint();
+        this.rightPoint.initResizePoint();
+        this.bottomPoint.initResizePoint();
 
         this.leftPoint.configResizePoint({
             id: "leftPoint",
@@ -180,7 +175,7 @@ Object.assign(Resize.prototype, {
         var deltaX = currentX - initX;
         var newWidth = initWidth - deltaX;
         var newX = initX + deltaX;
-        var limit = this.rightPoint.element.getBBox().x
+        var limit = this.rightPoint.element.getBBox().x;
 
         if(currentX < limit) {
             this.setResizableWidth(newWidth);
@@ -201,7 +196,7 @@ Object.assign(Resize.prototype, {
 
         if(currentY > limit) {
             this.setResizableHeight(newHeight);
-            this.setShapeHeight(newHeight)
+            this.setShapeHeight(newHeight);
             this.updateResisablePoints(this.resizableRow);
         }
     },
@@ -213,7 +208,7 @@ Object.assign(Resize.prototype, {
         var deltaY = currentY - initY;
         var newHeight = initHeight - deltaY;
         var newY = initY + deltaY;
-        var limit = this.bottomPoint.element.getBBox().y
+        var limit = this.bottomPoint.element.getBBox().y;
 
         if(currentY < limit) {
             this.setResizableHeight(newHeight);
@@ -235,11 +230,11 @@ Object.assign(Resize.prototype, {
         });
 
         if(domEl) {
-            domEl.remove()
+            domEl.remove();
         }
     },
 
     stopResize: function(evt) {
-        this.fire({type:"resized", data: evt})
+        this.fire({type:"resized", data: evt});
     }
 });

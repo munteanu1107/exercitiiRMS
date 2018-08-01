@@ -5,7 +5,6 @@ CustomEvents.prototype = {
 
     addListener: function(type, listener) {
 
-        // create an array if it doesn't exist
         if (!this.hasOwnProperty("_listeners")) {
             this._listeners = [];
         }

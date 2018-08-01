@@ -9,7 +9,7 @@ DragAndDrop.prototype = Object.create(CustomEvents.prototype);
 Object.assign(DragAndDrop.prototype, {
     constructor: DragAndDrop,
 
-    initDrag: function(elem) {
+    initDrag: function() {
         this.mouseDownHandler = this.mouseDown.bind(this);
         this.mouseMoveHandler = this.onMouseMove.bind(this);
         this.onMouseUpHandler = this.onMouseUp.bind(this);

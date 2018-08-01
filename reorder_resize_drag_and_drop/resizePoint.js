@@ -15,18 +15,16 @@ Point.prototype = Object.create(CustomEvents.prototype);
 Object.assign(Point.prototype, DragAndDrop.prototype, {
     constructor: Point,
 
-    initResizePoint: function(dragOrientation) {
+    initResizePoint: function() {
         this.element = this.createRectNode(this._parent, this.result);
 
         this.initDrag();
 
         this.startDrag = function(evt) {
-
             this.fire({type: "startDrag", el: this.element});
         };
 
         this.mouseMove = function(evt) {
-
             this.fire({type: "pointerMove", data: { el: this.element, mouseEvent: evt}});
         };
 
@@ -51,7 +49,7 @@ Object.assign(Point.prototype, DragAndDrop.prototype, {
                         return "-" + item.toLowerCase();
                     }), config[key]
             );
-        }
+        };
     },
 
     createRectNode: function (append, attrs) {

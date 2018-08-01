@@ -50,7 +50,7 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
         this.mouseMove = function(evt) {
             var yPos = evt.pageY - this.shiftY;
 
-            this.setShapeYpos(yPos)
+            this.setShapeYpos(yPos);
             this.initResize(this.element);
 
             this.fire({type: "checkMousePos", data: evt});
