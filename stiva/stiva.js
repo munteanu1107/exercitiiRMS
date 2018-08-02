@@ -1,5 +1,5 @@
 
-export function Stack(size) {
+function Stack(size) {
     this._size = size;
     this._stack = [];
 }

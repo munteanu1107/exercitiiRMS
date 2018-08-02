@@ -11,10 +11,14 @@ MainShape.prototype = Object.create(CustomEvents.prototype);
 Object.assign(MainShape.prototype, Board.prototype, {
     constructor: MainShape,
 
-    init: function (elements, config) {
+    init: function (parent, startPos) {
+        this.startPos = startPos;
+        this.virtualBandHeight = this.startPos;
+        this.id = 0;
+
         this.initBoard("main");
-        this.startPos = config.y;
-        this.mainGroup = this.createGroupNode(config.parent, {
+
+        this.mainGroup = this.createGroupNode(parent, {
             id: "mainGroup"
         });
 
@@ -26,24 +30,18 @@ Object.assign(MainShape.prototype, Board.prototype, {
             y2: -9999,
             stroke: "red"
         });
-
-        this.createShape(elements, config);
     },
 
-    createShape: function(elements, config) {
+    createShape: function(config) {
+        var shape = new Shape(config.width, config.height, config.x, this.virtualBandHeight, config.distance, this.id, config.resizable, config.resizablePoints);
 
-        for (var i = 0; i < elements; i++) {
-            var shape = new Shape(config.parent, config.width, config.height, config.x, config.y, config.distance, i);
-
-            config.y += (config.height + config.distance);
-            config.width -= config.height;
-
-            shape.render();
-            shape.addListener("resized", this.resized.bind(this));
-            shape.addListener("checkMousePos", this.checkMousePosAndDrawLine.bind(this));
-            shape.addListener("dropShape", this.dropShape.bind(this));
-            this.listOfShapes.push(shape);
-        }
+        shape.render();
+        shape.addListener("resized", this.resized.bind(this));
+        shape.addListener("checkMousePos", this.checkMousePosAndDrawLine.bind(this));
+        shape.addListener("dropShape", this.dropShape.bind(this));
+        this.listOfShapes.push(shape);
+        this.virtualBandHeight += config.height + config.distance;
+        this.id++
     },
 
     positionElements: function(array, evt) {
@@ -97,18 +95,19 @@ Object.assign(MainShape.prototype, Board.prototype, {
         var selectedIndex = -1;
 
         for(var i = 0; i < this.intervals.length; i++) {
-            if((i-1) !== selectedElementId && i !== selectedElementId) {
-                this.flag = this.is_inside(curentMousePosition, this.intervals[i].y1, this.intervals[i].y2, selectedElementId);
-            }
+            this.flag = this.is_inside(curentMousePosition, this.intervals[i].y1, this.intervals[i].y2, selectedElementId);
 
             if (this.flag) {
                 selectedIndex = i;
+
+                if(selectedIndex < selectedElementId || selectedIndex !== selectedElementId) {
+                    this.drawLine( this.intervals[selectedIndex].y2, evt);
+                }
             }
         }
 
         if(selectedIndex >= 0) {
             this.reorderFlag = true;
-            this.drawLine( this.intervals[selectedIndex].y1, evt);
         } else {
             this.reorderFlag = false;
             this.drawLine();
@@ -119,6 +118,7 @@ Object.assign(MainShape.prototype, Board.prototype, {
         this.drawLine();
 
         var curentMousePosition = evt.data.clientY;
+        var selectedElement = evt.target
         var selectedElementId = parseInt(evt.target.element.id);
         var selectedIndex = -1;
         var indexPosInArray;
@@ -148,9 +148,15 @@ Object.assign(MainShape.prototype, Board.prototype, {
             }
 
             this.reorderFlag = false;
+            this.positionElements(this.listOfShapes, evt);
+        } else {
+            selectedElement.setShapeYpos(evt.target.elementBoundingRect.y)
+
+            if(evt.target._resizable) {
+                evt.target.initResize(evt.target.element);
+            }
         }
 
-        this.positionElements(this.listOfShapes, evt);
     },
 
     is_inside: function (mousePos, y1, y2, selectedElementId) {
@@ -176,8 +182,8 @@ Object.assign(MainShape.prototype, Board.prototype, {
         if(yPos) {
             this.line.setAttribute("x1", 0);
             this.line.setAttribute("x2", 9999);
-            this.line.setAttribute("y1", yPos);
-            this.line.setAttribute("y2", yPos);
+            this.line.setAttribute("y1", yPos - 20);
+            this.line.setAttribute("y2", yPos - 20);
         } else {
             this.line.setAttribute("x1", 9999);
             this.line.setAttribute("x2", 9999);

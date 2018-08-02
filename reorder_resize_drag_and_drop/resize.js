@@ -15,9 +15,9 @@ Object.assign(Resize.prototype, {
         this.removeResizableRect(element);
 
         // Handlers
-        this.pointerMoveHandler = this.onClickPointer.bind(this);
+        this.resizePointStartDragHandler = this.resizePointStartDrag.bind(this);
+        this.pointerMoveHandler = this.mouseMovePointer.bind(this);
         this.stopResizeHandler = this.stopResize.bind(this);
-        this.resizePointStarDragHandler = this.resizePointStarDrag.bind(this);
 
         this.resizableGroup = this.createGroupNode(this.row.id, {
             id: "resizeGroup"
@@ -39,9 +39,9 @@ Object.assign(Resize.prototype, {
 
         var points = [];
 
-        for(var i = 0; i < 4; i++) {
-            var point = new Point(this.pointersGroup.id, mainRow.width, mainRow.height, mainRow.x, mainRow.y, 10);
-            point.addListener("startDrag", this.resizePointStarDragHandler);
+        for(var i = 0; i < 8; i++) {
+            var point = new Point(this.pointersGroup.id, 10);
+            point.addListener("startDrag", this.resizePointStartDragHandler);
             point.addListener("pointerMove", this.pointerMoveHandler);
             point.addListener("stopResize", this.stopResizeHandler);
 
@@ -52,16 +52,28 @@ Object.assign(Resize.prototype, {
         this.topPoint = points[1];
         this.rightPoint = points[2];
         this.bottomPoint = points[3];
+        //
+        this.topLeftPoint = points[4];
+        this.topRightPoint = points[5];
+        this.bottomLeftPoint = points[6];
+        this.bottomRightPoint = points[7];
 
         this.leftPoint.initResizePoint();
         this.topPoint.initResizePoint();
         this.rightPoint.initResizePoint();
         this.bottomPoint.initResizePoint();
+        //
+        this.topLeftPoint.initResizePoint();
+        this.topRightPoint.initResizePoint();
+        this.bottomLeftPoint.initResizePoint();
+        this.bottomRightPoint.initResizePoint();
 
         this.leftPoint.configResizePoint({
             id: "leftPoint",
             width: 10,
             height: 10,
+            x: -9999,
+            y: -9999,
             style: "cursor: e-resize"
         });
 
@@ -69,6 +81,8 @@ Object.assign(Resize.prototype, {
             id: "topPoint",
             width: 10,
             height: 10,
+            x: -9999,
+            y: -9999,
             style: "cursor: n-resize"
         });
 
@@ -76,6 +90,8 @@ Object.assign(Resize.prototype, {
             id: "rightPoint",
             width: 10,
             height: 10,
+            x: -9999,
+            y: -9999,
             style: "cursor: e-resize"
         });
 
@@ -83,14 +99,54 @@ Object.assign(Resize.prototype, {
             id: "bottomPoint",
             width: 10,
             height: 10,
+            x: -9999,
+            y: -9999,
             style: "cursor: n-resize"
+        });
+        ////////////////
+
+        this.topLeftPoint.configResizePoint({
+            id: "topLeftPoint",
+            width: 10,
+            height: 10,
+            x: -9999,
+            y: -9999,
+            style: "cursor: nw-resize"
+        });
+
+        this.topRightPoint.configResizePoint({
+            id: "topRightPoint",
+            width: 10,
+            height: 10,
+            x: -9999,
+            y: -9999,
+            style: "cursor: ne-resize"
+        });
+
+        this.bottomLeftPoint.configResizePoint({
+            id: "bottomLeftPoint",
+            width: 10,
+            height: 10,
+            x: -9999,
+            y: -9999,
+            style: "cursor: ne-resize"
+        });
+
+        this.bottomRightPoint.configResizePoint({
+            id: "bottomRightPoint",
+            width: 10,
+            height: 10,
+            x: -9999,
+            y: -9999,
+            style: "cursor: nw-resize"
         });
 
         this.updateResisablePoints(this.resizableElement);
     },
 
-    resizePointStarDrag: function(data) {
+    resizePointStartDrag: function(data) {
         this.currentPoint = data.el;
+        this.currentShape = data.element;
         this.currentPointBBox = data.el.getBBox();
         this.shapeBBox = this.element.getBBox();
     },
@@ -98,25 +154,64 @@ Object.assign(Resize.prototype, {
     updateResisablePoints: function(element) {
         var mainRow = element.getBBox();
 
-        var leftXpos = mainRow.x - (this.leftPoint._dimension / 2);
-        var leftYpos = mainRow.y + (mainRow.height / 2) - (this.leftPoint._dimension / 2);
+        var leftXpos = mainRow.x - (this.leftPoint._pointerWidth / 2);
+        var leftYpos = mainRow.y + (mainRow.height / 2) - (this.leftPoint._pointerWidth / 2);
 
-        var rightXpos = mainRow.x + mainRow.width - (this.rightPoint._dimension / 2);
-        var rightYpos = mainRow.y + (mainRow.height / 2) - (this.rightPoint._dimension / 2);
+        var rightXpos = mainRow.x + mainRow.width - (this.rightPoint._pointerWidth / 2);
+        var rightYpos = mainRow.y + (mainRow.height / 2) - (this.rightPoint._pointerWidth / 2);
 
-        var topXpos = mainRow.x + (mainRow.width / 2) - (this.topPoint._dimension / 2);
-        var topYpos = mainRow.y - (this.topPoint._dimension / 2);
+        var topXpos = mainRow.x + (mainRow.width / 2) - (this.topPoint._pointerWidth / 2);
+        var topYpos = mainRow.y - (this.topPoint._pointerWidth / 2);
 
-        var bottomXpos = mainRow.x + (mainRow.width / 2) - (this.bottomPoint._dimension / 2);
-        var bottomYpos = mainRow.y + mainRow.height - (this.bottomPoint._dimension / 2);
+        var bottomXpos = mainRow.x + (mainRow.width / 2) - (this.bottomPoint._pointerWidth / 2);
+        var bottomYpos = mainRow.y + mainRow.height - (this.bottomPoint._pointerWidth / 2);
 
-        this.rightPoint.setResizablePosition(rightXpos, rightYpos);
-        this.leftPoint.setResizablePosition(leftXpos, leftYpos);
-        this.topPoint.setResizablePosition(topXpos, topYpos);
-        this.bottomPoint.setResizablePosition(bottomXpos, bottomYpos);
+        var leftTopXpos = mainRow.x - (this.rightPoint._pointerWidth / 2);
+        var leftTopYpos = mainRow.y - (this.rightPoint._pointerWidth / 2);
+
+        var rightTopXpos = mainRow.x + mainRow.width - (this.rightPoint._pointerWidth / 2);
+        var rightTopYpos = mainRow.y - (this.rightPoint._pointerWidth / 2);
+
+        var leftBottomXpos = mainRow.x - (this.rightPoint._pointerWidth / 2);
+        var leftBottomYpos = mainRow.y + mainRow.height - (this.topPoint._pointerWidth / 2);
+
+        var rightBottomXpos = mainRow.x + mainRow.width - (this.bottomPoint._pointerWidth / 2);
+        var rightBottomYpos = mainRow.y + mainRow.height - (this.bottomPoint._pointerWidth / 2);
+
+        var i = this._resizablePoints.length;
+
+        while(i >= 0) {
+            switch(this._resizablePoints[i]) {
+                case "top":
+                    this.topPoint.setResizablePosition(topXpos, topYpos);
+                    break;
+                case "left":
+                    this.leftPoint.setResizablePosition(leftXpos, leftYpos);
+                    break;
+                case "right":
+                    this.rightPoint.setResizablePosition(rightXpos, rightYpos);
+                    break;
+                case "bottom":
+                    this.bottomPoint.setResizablePosition(bottomXpos, bottomYpos);
+                    break;
+                case "topLeft":
+                    this.topLeftPoint.setResizablePosition(leftTopXpos, leftTopYpos);
+                    break;
+                case "topRight":
+                    this.topRightPoint.setResizablePosition(rightTopXpos, rightTopYpos);
+                    break;
+                case "bottomLeft":
+                    this.bottomLeftPoint.setResizablePosition(leftBottomXpos, leftBottomYpos);
+                    break;
+                case "bottomRight":
+                    this.bottomRightPoint.setResizablePosition(rightBottomXpos, rightBottomYpos);
+                    break;
+            }
+            --i;
+        }
     },
 
-    onClickPointer: function(data) {
+    mouseMovePointer: function(data) {
         switch (data.data.el.id) {
             case "rightPoint":
                 this.resizeRight(data);
@@ -129,6 +224,18 @@ Object.assign(Resize.prototype, {
                 break;
             case "bottomPoint":
                 this.resizeBottom(data);
+                break;
+            case "topLeftPoint":
+                this.resizeTopLeft(data);
+                break;
+            case "topRightPoint":
+                this.resizeTopRight(data);
+                break;
+            case "bottomLeftPoint":
+                this.resizeBottomLeft(data);
+                break;
+            case "bottomRightPoint":
+                this.resizeBottomRight(data);
                 break;
         }
     },
@@ -159,7 +266,7 @@ Object.assign(Resize.prototype, {
         var currentX = data.data.mouseEvent.clientX;
         var deltaX = currentX - initX;
         var newWidth = initWidth + deltaX - (this.currentPointBBox.width / 2);
-        var limit = this.leftPoint.element.getBBox().x + (this.currentPointBBox.width * 2)
+        var limit = this.leftPoint.element.getBBox().x + (this.currentPointBBox.width * 2);
 
         if(currentX > limit) {
             this.setResizableWidth(newWidth);
@@ -173,8 +280,8 @@ Object.assign(Resize.prototype, {
         var initWidth = this.shapeBBox.width;
         var currentX = data.data.mouseEvent.clientX;
         var deltaX = currentX - initX;
-        var newWidth = initWidth - deltaX;
-        var newX = initX + deltaX;
+        var newWidth = initWidth - deltaX + (this.currentPointBBox.width / 2);
+        var newX = initX + deltaX - (this.currentPointBBox.width / 2);
         var limit = this.rightPoint.element.getBBox().x;
 
         if(currentX < limit) {
@@ -187,11 +294,11 @@ Object.assign(Resize.prototype, {
     },
 
     resizeBottom: function(data) {
-        var initY = this.currentPointBBox.y + (this.currentPointBBox.width / 2);
+        var initY = this.currentPointBBox.y;
         var initHeight = this.shapeBBox.height;
-        var currentY = data.data.mouseEvent.clientY;
+        var currentY = data.data.mouseEvent.clientY - (this.currentPointBBox.width / 2);
         var deltaY = currentY - initY;
-        var newHeight = initHeight + deltaY;
+        var newHeight = initHeight + deltaY - (this.currentPointBBox.width / 2);
         var limit = this.topPoint.element.getBBox().y + this.currentPointBBox.width;
 
         if(currentY > limit) {
@@ -202,11 +309,11 @@ Object.assign(Resize.prototype, {
     },
 
     resizeTop: function(data) {
-        var initY = this.currentPointBBox.y + (this.currentPointBBox.width / 2);
+        var initY = this.currentPointBBox.y;
         var initHeight = this.shapeBBox.height;
-        var currentY = data.data.mouseEvent.clientY;
+        var currentY = data.data.mouseEvent.clientY - (this.currentPointBBox.width / 2);
         var deltaY = currentY - initY;
-        var newHeight = initHeight - deltaY;
+        var newHeight = initHeight - deltaY + (this.currentPointBBox.width / 2);
         var newY = initY + deltaY;
         var limit = this.bottomPoint.element.getBBox().y;
 
@@ -217,6 +324,126 @@ Object.assign(Resize.prototype, {
             this.setResizableYpos(newY);
             this.updateResisablePoints(this.resizableRow);
         }
+    },
+
+    resizeTopLeft: function(data) {
+        var initY = this.currentPointBBox.y;
+        var initHeight = this.shapeBBox.height;
+        var currentY = data.data.mouseEvent.clientY - (this.currentPointBBox.width / 2);
+        var deltaY = currentY - initY;
+        var newHeight = initHeight - deltaY + (this.currentPointBBox.width / 2);
+        var newY = initY + deltaY;
+        var initX = this.currentPointBBox.x + (this.currentPointBBox.width / 2);
+        var initWidth = this.shapeBBox.width;
+        var currentX = data.data.mouseEvent.clientX;
+        var deltaX = currentX - initX;
+        var newWidth = initWidth - deltaX + (this.currentPointBBox.width / 2);
+        var newX = initX + deltaX - (this.currentPointBBox.width / 2);
+        var limitX = this.bottomRightPoint.element.getBBox().x;
+        var limitY = this.bottomRightPoint.element.getBBox().y;
+
+        if(currentX < limitX) {
+            this.setResizableWidth(newWidth);
+            this.setShapeWidth(newWidth);
+            this.setShapeXpos(newX);
+            this.setResizableXpos(newX);
+        }
+
+        if(currentY < limitY) {
+            this.setResizableHeight(newHeight);
+            this.setShapeHeight(newHeight);
+            this.setShapeYpos(newY);
+            this.setResizableYpos(newY);
+        }
+
+        this.updateResisablePoints(this.resizableRow);
+    },
+
+    resizeTopRight: function(data) {
+        var initY = this.currentPointBBox.y;
+        var initHeight = this.shapeBBox.height;
+        var currentY = data.data.mouseEvent.clientY - (this.currentPointBBox.width / 2);
+        var deltaY = currentY - initY;
+        var newHeight = initHeight - deltaY + (this.currentPointBBox.width / 2);
+        var newY = initY + deltaY;
+        var initX = this.currentPointBBox.x + (this.currentPointBBox.width / 2);
+        var initWidth = this.shapeBBox.width;
+        var currentX = data.data.mouseEvent.clientX;
+        var deltaX = currentX - initX;
+        var newWidth = initWidth + deltaX - (this.currentPointBBox.width / 2);
+        var limitY = this.bottomLeftPoint.element.getBBox().y;
+        var limitX = this.bottomLeftPoint.element.getBBox().x + (this.currentPointBBox.width * 2);
+
+        if(currentX > limitX) {
+            this.setResizableWidth(newWidth);
+            this.setShapeWidth(newWidth);
+        }
+
+        if(currentY < limitY) {
+            this.setResizableHeight(newHeight);
+            this.setShapeHeight(newHeight);
+            this.setShapeYpos(newY);
+            this.setResizableYpos(newY);
+        }
+
+        this.updateResisablePoints(this.resizableRow);
+    },
+
+    resizeBottomLeft: function(data) {
+        var initY = this.currentPointBBox.y;
+        var initHeight = this.shapeBBox.height;
+        var currentY = data.data.mouseEvent.clientY - (this.currentPointBBox.width / 2);
+        var deltaY = currentY - initY;
+        var newHeight = initHeight + deltaY - (this.currentPointBBox.width / 2);
+        var initX = this.currentPointBBox.x + (this.currentPointBBox.width / 2);
+        var initWidth = this.shapeBBox.width;
+        var currentX = data.data.mouseEvent.clientX;
+        var deltaX = currentX - initX;
+        var newWidth = initWidth - deltaX + (this.currentPointBBox.width / 2);
+        var newX = initX + deltaX - (this.currentPointBBox.width / 2);
+        var limitY = this.topRightPoint.element.getBBox().y + this.currentPointBBox.width;
+        var limitX = this.topRightPoint.element.getBBox().x;
+
+        if(currentX < limitX) {
+            this.setResizableWidth(newWidth);
+            this.setShapeWidth(newWidth);
+            this.setShapeXpos(newX);
+            this.setResizableXpos(newX);
+        }
+
+        if(currentY > limitY) {
+            this.setResizableHeight(newHeight);
+            this.setShapeHeight(newHeight);
+        }
+
+        this.updateResisablePoints(this.resizableRow);
+    },
+
+    resizeBottomRight: function(data) {
+        var initY = this.currentPointBBox.y;
+        var initHeight = this.shapeBBox.height;
+        var currentY = data.data.mouseEvent.clientY - (this.currentPointBBox.width / 2);
+        var deltaY = currentY - initY;
+        var newHeight = initHeight + deltaY - (this.currentPointBBox.width / 2);
+        var initX = this.currentPointBBox.x + (this.currentPointBBox.width / 2);
+        var initWidth = this.shapeBBox.width;
+        var currentX = data.data.mouseEvent.clientX;
+        var deltaX = currentX - initX;
+        var newWidth = initWidth + deltaX - (this.currentPointBBox.width / 2);
+        var limitX = this.topLeftPoint.element.getBBox().x + (this.currentPointBBox.width * 2);
+        var limitY = this.topLeftPoint.element.getBBox().y + this.currentPointBBox.width;
+
+        if(currentX > limitX) {
+            this.setResizableWidth(newWidth);
+            this.setShapeWidth(newWidth);
+        }
+
+        if(currentY > limitY) {
+            this.setResizableHeight(newHeight);
+            this.setShapeHeight(newHeight);
+        }
+
+        this.updateResisablePoints(this.resizableRow);
     },
 
     removeResizableRect: function(el) {

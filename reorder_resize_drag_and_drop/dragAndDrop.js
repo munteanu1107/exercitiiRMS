@@ -1,12 +1,9 @@
-import { CustomEvents } from "./custom_events.js";
-
 export function DragAndDrop() {
 
 }
 
-DragAndDrop.prototype = Object.create(CustomEvents.prototype);
+DragAndDrop.prototype = {
 
-Object.assign(DragAndDrop.prototype, {
     constructor: DragAndDrop,
 
     initDrag: function() {
@@ -45,4 +42,4 @@ Object.assign(DragAndDrop.prototype, {
     stopDrag: function() {
         throw("this function must be overwritten");
     }
-});
+};

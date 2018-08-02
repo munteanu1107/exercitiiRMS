@@ -1,13 +1,9 @@
 import { CustomEvents } from "./custom_events.js";
 import { DragAndDrop } from "./dragAndDrop.js";
 
-export function Point(parent, width, height, xPos, yPos, l) {
+export function Point(parent, width) {
     this._parent = parent;
-    this._width = width;
-    this._height = height;
-    this._xPos = xPos;
-    this._yPos = yPos;
-    this._dimension = l
+    this._pointerWidth = width;
 }
 
 Point.prototype = Object.create(CustomEvents.prototype);
@@ -16,7 +12,8 @@ Object.assign(Point.prototype, DragAndDrop.prototype, {
     constructor: Point,
 
     initResizePoint: function() {
-        this.element = this.createRectNode(this._parent, this.result);
+        this.initialised = true;
+        this.element = this.createRectNode(this._parent);
 
         this.initDrag();
 
@@ -36,20 +33,20 @@ Object.assign(Point.prototype, DragAndDrop.prototype, {
     },
 
     setResizablePosition: function(x, y) {
-        this.element.setAttribute("x", x);
-        this.element.setAttribute("y", y);
+            this.element.setAttribute("x", x);
+            this.element.setAttribute("y", y);
     },
 
     configResizePoint: function(config) {
-        for (var key in config) {
-            this.element.setAttributeNS(
-                null,
-                key.replace(/[A-Z]/g,
-                    function (item) {
-                        return "-" + item.toLowerCase();
-                    }), config[key]
-            );
-        };
+            for (var key in config) {
+                this.element.setAttributeNS(
+                    null,
+                    key.replace(/[A-Z]/g,
+                        function (item) {
+                            return "-" + item.toLowerCase();
+                        }), config[key]
+                );
+            };
     },
 
     createRectNode: function (append, attrs) {
@@ -71,7 +68,6 @@ Object.assign(Point.prototype, DragAndDrop.prototype, {
                     }), attr[key]
             );
         }
-
         return el;
     }
 });

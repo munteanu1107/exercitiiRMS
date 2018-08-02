@@ -1,21 +1,22 @@
 import { CustomEvents } from "./custom_events.js";
 import { DragAndDrop } from "./dragAndDrop.js";
-import { Board } from "./board.js";
 import { Resize } from "./resize.js";
+import { CreateNode } from "./createNodes.js";
 
-export function Shape(parent, width, height, x, y, distance, index) {
-    this._parent = parent;
+export function Shape(width, height, x, y, distance, index, resizable, resizablePoints) {
     this._width = width;
     this._height = height;
     this._xPos = x;
     this._yPos = y;
     this._distance = distance;
     this._index = index;
+    this._resizable = resizable;
+    this._resizablePoints = resizablePoints;
 };
 
 Shape.prototype = Object.create(CustomEvents.prototype);
 
-Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.prototype, {
+Object.assign(Shape.prototype, CreateNode.prototype, DragAndDrop.prototype, Resize.prototype, {
     constructor: Shape,
 
     render: function() {
@@ -38,20 +39,19 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
         this.startDrag = function(evt) {
             this.elementBoundingRect = evt.target.getBBox();
 
-            this.initResize(this.element)
             this.shiftX = evt.clientX - this.elementBoundingRect.x;
             this.shiftY = evt.clientY - this.elementBoundingRect.y;
 
             evt.target.style.position = "absolute";
-
-            this.fire({type: "startReorder", data: evt});
         };
 
         this.mouseMove = function(evt) {
             var yPos = evt.pageY - this.shiftY;
-
             this.setShapeYpos(yPos);
-            this.initResize(this.element);
+
+            if(this._resizable) {
+                this.initResize(this.element, this._resizablePoints);
+            }
 
             this.fire({type: "checkMousePos", data: evt});
         };
@@ -59,7 +59,6 @@ Object.assign(Shape.prototype, Board.prototype, DragAndDrop.prototype, Resize.pr
         this.stopDrag = function(evt) {
             this.fire({type: "dropShape", data: evt});
         }
-
     },
 
     setWidth: function(val) {
