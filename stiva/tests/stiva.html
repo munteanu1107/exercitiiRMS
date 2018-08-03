@@ -1,34 +1,89 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>QUnit Example</title>
-  <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.6.1.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.6.1.css">
 </head>
+
 <body>
-  <div id="qunit"></div>
-  <div id="qunit-fixture"></div>
-  <script src="https://code.jquery.com/qunit/qunit-2.6.1.js"></script>
-  <script src="../stiva.js"></script>
-  <script>
-    QUnit.test("Instantiating a Stack", function(assert) {
-        var stack = new Stack();
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="https://code.jquery.com/qunit/qunit-2.6.1.js"></script>
+    <script src="../stiva.js"></script>
 
-        assert.ok(stack, "An instance is created");
-    });
+    <script>
+      QUnit.test("Instantiating a Stack", function (assert) {
+          var stack = new Stack();
 
-    QUnit.test("Verify if stack has size", function(assert) {
+          assert.ok(stack, "An instance is created");
+      });
+
+      QUnit.test("Check stack size", function (assert) {
+          var stack = new Stack(3);
+
+          assert.equal(stack._size, 3, "Stack has a size of 3");
+      });
+
+      QUnit.test("Ensure push() method works", function (assert) {
+          var stack = new Stack(3);
+          stack.push("test");
+
+          assert.equal(stack._stack[0], "test", "Stack has an item 'test'");
+      });
+
+      QUnit.test("Ensure top() method works", function (assert) {
+          var stack = new Stack(3);
+          stack.push("test1");
+          stack.push("test2");
+          var top = stack.top();
+
+          assert.equal(top, "test2", "top() method returned last element from stack");
+      });
+
+      QUnit.test("Ensure pop() method works", function(assert) {
         var stack = new Stack(3);
+        stack.push("test");
+        stack.push("test1");
+        var pop = stack.pop();
 
-        assert.equal(stack._size, "3", "Stack has a size of 3");
-    });
+        assert.equal(pop, "test1", "pop() method returned last eelement")
+      });
 
-    QUnit.test("Check if", function(assert) {
+      QUnit.test("Ensure is_empty() method works", function(assert) {
         var stack = new Stack(3);
+        var is_empty = stack.is_empty();
 
-        assert.equal(stack._size, "3", "Stack has a size of 3");
-    });
-  </script>
+        assert.ok(is_empty, "is_empty() method returned boolean " + is_empty)
+      });
+
+      QUnit.test("Ensure is_full() method works", function(assert) {
+        var stack = new Stack(1);
+        stack.push("test");
+        var is_full = stack.is_full();
+
+        assert.ok(is_full, "is_full() method returned boolean " + is_full);
+      });
+
+      QUnit.test("Ensure get_size() method works", function(assert) {
+        var stack = new Stack(3);
+        stack.push("test");
+        var size = stack.get_size();
+
+        assert.equal(size, 1, "get_size() method returned stack size of 1");
+      });
+
+      QUnit.test("Ensure clear() method works", function(assert) {
+        var stack = new Stack(3);
+        stack.push("test");
+        stack.clear();
+        var clear = stack.get_size();
+
+        assert.equal(clear, 0, "clear() method returned stack length of 0");
+      });
+    </script>
 </body>
+
 </html>

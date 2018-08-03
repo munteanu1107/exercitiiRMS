@@ -23,7 +23,7 @@ var shape2 = {
     height: 80,
     x: 100,
     distance: 40,
-    resizable: true,
+    resizable: false,
     resizablePoints: ["topLeft", "topRight", "bottomLeft", "bottomRight"]
 };
 
