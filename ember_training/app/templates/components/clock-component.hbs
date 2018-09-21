@@ -1,0 +1,64 @@
+<svg width="{{svgDimension}}" height="{{svgDimension}}">
+    <g>
+        <circle
+            class="clock"
+            cx="{{circleXpos}}"
+            cy="{{circleYpos}}"
+            r="{{radius}}"
+            fill={{style.clock.fill}}
+            stroke={{style.clock.stroke}}
+            stroke-width={{style.clock.strokeWidth}}
+        />
+
+        {{#each model.data as |clock index|}}
+            <text
+                class="points"
+                id={{clock.id}}
+                x={{clock.xpos}}
+                y={{clock.ypos}}
+                fill={{style.points.fill}}
+                {{action "mouseEntered" clock this on="mouseEnter"}}
+                {{action "mouseOut" clock this on="mouseLeave"}}
+            >
+                    {{clock.hour}}
+            </text>
+        {{/each}}
+
+        <line
+            class="hours"
+            x1={{centerCirclePoint}}
+            y1={{centerCirclePoint}}
+            x2={{hoursX2}}
+            y2={{hoursY2}}
+            stroke={{style.hours.stroke}}
+            stroke-width={{style.hours.strokeWidth}}
+        />
+        <line
+            class="minutes"
+            x1={{centerCirclePoint}}
+            y1={{centerCirclePoint}}
+            x2={{minutesX2}}
+            y2={{minutesY2}}
+            stroke={{style.minutes.stroke}}
+            stroke-width={{style.minutes.strokeWidth}}
+        />
+        <line
+            class="seconds"
+            x1={{centerCirclePoint}}
+            y1={{centerCirclePoint}}
+            x2={{secondsX2}}
+            y2={{secondsY2}}
+            stroke={{style.seconds.stroke}}
+            stroke-width={{style.seconds.strokeWidth}}
+        />
+
+        <circle
+            class="center"
+            cx="{{circleXpos}}"
+            cy="{{circleYpos}}"
+            r="7"
+            fill="rgba(20, 40, 50, 0.888)"
+        />
+    </g>
+</svg>
+<div class="city">{{model.timezone.city}}</div>

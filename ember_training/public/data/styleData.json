@@ -1,0 +1,83 @@
+[
+    {
+        "id": 1,
+        "clock": {
+            "fill": "#ffffff",
+            "stroke": "#000",
+            "strokeWidth": "1"
+        },
+
+        "points": {
+            "fill": "#000"
+        },
+
+        "hours": {
+            "stroke": "#000",
+            "strokeWidth": "3"
+        },
+
+        "minutes": {
+            "stroke": "#000",
+            "strokeWidth": "3"
+        },
+
+        "seconds": {
+            "stroke": "#000",
+            "strokeWidth": "3"
+        }
+    },
+
+    {
+        "id": 2,
+        "clock": {
+            "fill": "rgba(211, 192, 229, 0.637)",
+            "stroke": "rgba(63, 15, 175, 0.335)",
+            "strokeWidth": "2"
+        },
+
+        "points": {
+            "fill": "rgba(45, 29, 136, 0.63)"
+        },
+
+        "hours": {
+            "stroke": "rgba(232, 5, 240, 0.808)",
+            "strokeWidth": "3"
+        },
+
+        "minutes": {
+            "stroke": "rgba(241, 84, 158, 0.774)",
+            "strokeWidth": "2"
+        },
+
+        "seconds": {
+            "stroke": "rgba(246, 173, 234, 0.733)",
+            "strokeWidth": "1"
+        }
+    },
+
+    {
+        "id": 3,
+        "clock": {
+            "fill": "rgba(172, 95, 8, 0.513)",
+            "stroke": "rgba(175, 172, 15, 0.548)",
+            "strokeWidth": "5"
+        },
+
+        "points": {
+            "fill": "rgba(85, 29, 29, 0.726)"
+        },
+
+        "hours": {
+            "stroke": "rgba(240, 236, 8, 0.787)",
+            "strokeWidth": "3"
+        },
+        "minutes": {
+            "stroke": "rgba(241, 84, 158, 0.774)",
+            "strokeWidth": "2"
+        },
+        "seconds": {
+            "stroke": "rgba(177, 241, 161, 0.733)",
+            "strokeWidth": "1"
+        }
+    }
+]

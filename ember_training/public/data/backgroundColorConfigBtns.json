@@ -1,0 +1,106 @@
+[
+    {
+        "id": 1,
+        "type": "radio",
+        "name": "Background Color",
+        "buttons": [{
+            "id":1,
+            "name": "White",
+            "isSelected": true,
+            "suffix": ".clock.fill",
+            "index": 0,
+            "value": "#ffffff",
+            "buttonFor": "backgroundColor"
+        },
+
+        {
+            "id":2,
+            "name": "Violet",
+            "isSelected": false,
+            "value": "rgba(211, 192, 229, 0.637)",
+            "suffix": ".clock.fill",
+            "index": 0,
+            "buttonFor": "backgroundColor"
+        },
+
+        {
+            "id":3,
+            "name": "Tortilla",
+            "isSelected": false,
+            "value": "rgba(172, 95, 8, 0.513)",
+            "suffix": ".clock.fill",
+            "index": 0,
+            "buttonFor": "backgroundColor"
+        }]
+    },
+
+    {
+        "id": 2,
+        "type":"radio",
+        "name": "Background Color",
+        "buttons": [{
+            "id":1,
+            "name": "White",
+            "isSelected": false,
+            "suffix": ".clock.fill",
+            "index": 1,
+            "value": "#ffffff",
+            "buttonFor": "backgroundColor"
+        },
+
+        {
+            "id":2,
+            "name": "Violet",
+            "isSelected": true,
+            "value": "rgba(211, 192, 229, 0.637)",
+            "suffix": ".clock.fill",
+            "index": 1,
+            "buttonFor": "backgroundColor"
+        },
+
+        {
+            "id":3,
+            "name": "Tortilla",
+            "isSelected": false,
+            "value": "rgba(172, 95, 8, 0.513)",
+            "suffix": ".clock.fill",
+            "index": 1,
+            "buttonFor": "backgroundColor"
+        }]
+    },
+
+    {
+        "id": 3,
+        "type":"radio",
+        "name": "Background Color",
+        "buttons": [{
+            "id":1,
+            "name": "White",
+            "isSelected": false,
+            "suffix": ".clock.fill",
+            "index": 2,
+            "value": "#ffffff",
+            "buttonFor": "backgroundColor"
+        },
+
+        {
+            "id":2,
+            "name": "Violet",
+            "isSelected": false,
+            "value": "rgba(211, 192, 229, 0.637)",
+            "suffix": ".clock.fill",
+            "index": 2,
+            "buttonFor": "backgroundColor"
+        },
+
+        {
+            "id":3,
+            "name": "Tortilla",
+            "isSelected": true,
+            "value": "rgba(172, 95, 8, 0.513)",
+            "suffix": ".clock.fill",
+            "index": 2,
+            "buttonFor": "backgroundColor"
+        }]
+    }
+]

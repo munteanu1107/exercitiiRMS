@@ -1,0 +1,6 @@
+<div class={{styleClass}}>
+    {{#each model.buttonsConfig as |btns|}}
+        {{component "button-group" model=btns type=btns.type}}
+    {{/each}}
+</div>
+{{yield}}

@@ -1,0 +1,106 @@
+[
+    {
+        "id": 1,
+        "type": "radio",
+        "name": "Indicators Type",
+        "buttons": [{
+            "id":19,
+            "name": "Disc",
+            "isSelected": false,
+            "suffix": ".data",
+            "index": 0,
+            "value": "\u25CF",
+            "buttonFor": "indicators"
+        },
+
+        {
+            "id":20,
+            "name": "Diamond",
+            "isSelected": false,
+            "suffix": ".data",
+            "index": 0,
+            "value": "\u25C6",
+            "buttonFor": "indicators"
+        },
+
+        {
+            "id":21,
+            "name": "Numbers",
+            "isSelected": true,
+            "suffix": ".data",
+            "index": 0,
+            "value": "numbers",
+            "buttonFor": "indicators"
+        }]
+    },
+
+    {
+        "id": 2,
+        "type": "radio",
+        "name": "Indicators Type",
+        "buttons": [{
+            "id":19,
+            "name": "Disc",
+            "isSelected": true,
+            "suffix": ".data",
+            "index": 1,
+            "value": "\u25CF",
+            "buttonFor": "indicators"
+        },
+
+        {
+            "id":20,
+            "name": "Diamond",
+            "isSelected": false,
+            "suffix": ".data",
+            "index": 1,
+            "value": "\u25C6",
+            "buttonFor": "indicators"
+        },
+
+        {
+            "id":21,
+            "name": "Numbers",
+            "isSelected": false,
+            "suffix": ".data",
+            "index": 1,
+            "value": "numbers",
+            "buttonFor": "indicators"
+        }]
+    },
+
+    {
+        "id": 3,
+        "type": "radio",
+        "name": "Indicators Type",
+        "buttons": [{
+            "id":19,
+            "name": "Disc",
+            "isSelected": false,
+            "suffix": ".data",
+            "index": 2,
+            "value": "\u25CF",
+            "buttonFor": "indicators"
+        },
+
+        {
+            "id":20,
+            "name": "Diamond",
+            "isSelected": true,
+            "suffix": ".data",
+            "index": 2,
+            "value": "\u25C6",
+            "buttonFor": "indicators"
+        },
+
+        {
+            "id":21,
+            "name": "Numbers",
+            "isSelected": false,
+            "suffix": ".data",
+            "index": 2,
+            "value": "numbers",
+            "buttonFor": "indicators"
+        }]
+    }
+]

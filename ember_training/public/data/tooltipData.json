@@ -1,0 +1,19 @@
+{
+    "tooltip": {
+        "size": 100,
+        "textColor": "grey",
+        "backgroundColor": "white",
+        "side": {
+            "top": "top",
+            "bottom": "bottom",
+            "left": "left",
+            "right": "right"
+        },
+
+        "duration": 3000
+    },
+
+    "component": {
+
+    }
+}

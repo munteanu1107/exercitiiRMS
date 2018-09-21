@@ -1,0 +1,115 @@
+[
+    {
+        "id": 1,
+        "type":"checkbox",
+        "name": "Hide Clock-hands",
+        "buttons": [{
+            "id":10,
+            "name": "Seconds",
+            "isSelected": false,
+            "pathIsSelected": "model.3.0.buttons.0.isSelected",
+            "color": "#000",
+            "suffix": ".seconds.stroke",
+            "index": 0,
+            "buttonFor": "clockHand"
+        },
+
+        {
+            "id":11,
+            "name": "Minutes",
+            "isSelected": false,
+            "pathIsSelected": "model.3.0.buttons.1.isSelected",
+            "color": "#000",
+            "suffix": ".minutes.stroke",
+            "index": 0,
+            "buttonFor": "clockHand"
+        },
+
+        {
+            "id":12,
+            "name": "Hours",
+            "isSelected": false,
+            "pathIsSelected": "model.3.0.buttons.2.isSelected",
+            "color": "#000",
+            "suffix": ".hours.stroke",
+            "index": 0,
+            "buttonFor": "clockHand"
+        }]
+    },
+
+    {
+        "id": 2,
+        "type":"checkbox",
+        "name": "Hide Clock-hands",
+        "buttons": [{
+            "id":10,
+            "name": "Seconds",
+            "isSelected": false,
+            "pathIsSelected": "model.3.1.buttons.0.isSelected",
+            "color": "rgba(246, 173, 234, 0.733)",
+            "suffix": ".seconds.stroke",
+            "index": 1,
+            "buttonFor": "clockHand"
+        },
+
+        {
+            "id":11,
+            "name": "Minutes",
+            "isSelected": false,
+            "pathIsSelected": "model.3.1.buttons.1.isSelected",
+            "color": "rgba(241, 84, 158, 0.774)",
+            "suffix": ".minutes.stroke",
+            "index": 1,
+            "buttonFor": "clockHand"
+        },
+
+        {
+            "id":12,
+            "name": "Hours",
+            "isSelected": false,
+            "pathIsSelected": "model.3.1.buttons.2.isSelected",
+            "color": "rgba(232, 5, 240, 0.808)",
+            "suffix": ".hours.stroke",
+            "index": 1,
+            "buttonFor": "clockHand"
+        }]
+    },
+
+    {
+        "id": 3,
+        "type":"checkbox",
+        "name": "Hide Clock-hands",
+        "buttons": [{
+            "id":10,
+            "name": "Seconds",
+            "isSelected": false,
+            "pathIsSelected": "model.3.2.buttons.0.isSelected",
+            "color": "rgba(177, 241, 161, 0.733)",
+            "suffix": ".seconds.stroke",
+            "index": 2,
+            "buttonFor": "clockHand"
+        },
+
+        {
+            "id":11,
+            "name": "Minutes",
+            "isSelected": false,
+            "pathIsSelected": "model.3.2.buttons.1.isSelected",
+            "color": "rgba(241, 84, 158, 0.774)",
+            "suffix": ".minutes.stroke",
+            "index": 2,
+            "buttonFor": "clockHand"
+        },
+
+        {
+            "id":12,
+            "name": "Hours",
+            "isSelected": false,
+            "pathIsSelected": "model.3.2.buttons.2.isSelected",
+            "color": "rgba(240, 236, 8, 0.787)",
+            "suffix": ".hours.stroke",
+            "index": 2,
+            "buttonFor": "clockHand"
+        }]
+    }
+]

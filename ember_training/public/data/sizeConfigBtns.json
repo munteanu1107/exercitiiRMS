@@ -1,0 +1,106 @@
+[
+    {
+        "id": 1,
+        "type": "radio",
+        "name": "Clock Size",
+        "buttons": [{
+            "id":28,
+            "name": "1x",
+            "isSelected": false,
+            "suffix": ".radius",
+            "index": 0,
+            "value": 130,
+            "buttonFor": "size"
+        },
+
+        {
+            "id":29,
+            "name": "1.5x",
+            "isSelected": true,
+            "suffix": ".radius",
+            "index": 0,
+            "value": 150,
+            "buttonFor": "size"
+        },
+
+        {
+            "id":30,
+            "name": "2x",
+            "isSelected": false,
+            "suffix": ".radius",
+            "index": 0,
+            "value": 170,
+            "buttonFor": "size"
+        }]
+    },
+
+    {
+        "id": 2,
+        "type": "radio",
+        "name": "Clock Size",
+        "buttons": [{
+            "id":28,
+            "name": "1x",
+            "isSelected": true,
+            "suffix": ".radius",
+            "index": 1,
+            "value": 130,
+            "buttonFor": "size"
+        },
+
+        {
+            "id":29,
+            "name": "1.5x",
+            "isSelected": false,
+            "suffix": ".radius",
+            "index": 1,
+            "value": 150,
+            "buttonFor": "size"
+        },
+
+        {
+            "id":30,
+            "name": "2x",
+            "isSelected": false,
+            "suffix": ".radius",
+            "index": 1,
+            "value": 170,
+            "buttonFor": "size"
+        }]
+    },
+
+    {
+        "id": 3,
+        "type": "radio",
+        "name": "Clock Size",
+        "buttons": [{
+            "id":28,
+            "name": "1x",
+            "isSelected": false,
+            "suffix": ".radius",
+            "index": 2,
+            "value": 130,
+            "buttonFor": "size"
+        },
+
+        {
+            "id":29,
+            "name": "1.5x",
+            "isSelected": false,
+            "suffix": ".radius",
+            "index": 2,
+            "value": 150,
+            "buttonFor": "size"
+        },
+
+        {
+            "id":30,
+            "name": "2x",
+            "isSelected": true,
+            "suffix": ".radius",
+            "index": 2,
+            "value": 170,
+            "buttonFor": "size"
+        }]
+    }
+]
