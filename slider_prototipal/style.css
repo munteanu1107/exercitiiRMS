@@ -1,0 +1,72 @@
+.slider {
+    background-color: white;
+}
+
+.slider > .sliderLine {
+    background-color: black;
+}
+
+.slider > .sliderDot {
+    background-color: red;
+}
+
+
+.zen-slider1 {
+    background-color: bisque;
+}
+
+.zen-slider1 > .sliderLine {
+    background-color: red;
+}
+
+.zen-slider1 > .sliderDot {
+    background-color: blue;
+}
+
+.zen-slider2 {
+    background-color: green;
+}
+
+.zen-slider2 > .sliderLine {
+    background-color: blueviolet;
+}
+
+.zen-slider2 > .sliderDot {
+    background-color: royalblue;
+}
+
+.zen-slider3 {
+    background-color: plum;
+}
+
+.zen-slider3 > .sliderLine {
+    background-color: greenyellow;
+}
+
+.zen-slider3 > .sliderDot {
+    background-color: green;
+}
+
+.zen-slider4 {
+    background-color: bisque;
+}
+
+.zen-slider4 > .sliderLine {
+    background-color: red;
+}
+
+.zen-slider4 > .sliderDot {
+    background-color: blue;
+}
+
+.zen-slider5 {
+    background-color: bisque;
+}
+
+.zen-slider5 > .sliderLine {
+    background-color: red;
+}
+
+.zen-slider5 > .sliderDot {
+    background-color: blue;
+}

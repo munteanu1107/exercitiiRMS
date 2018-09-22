@@ -1,0 +1,8 @@
+
+{{yield}}
+<div><strong class="description">{{name}}:</strong>
+    {{#each btnsForBackground as |button|}}
+        {{state-button model=button isSelected=button.isSelected target=target}}
+    {{/each}}
+</div>
+

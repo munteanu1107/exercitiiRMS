@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+#board {
+    position: absolute;
+}
+
+#buttons {
+    position: absolute;
+    left: 49%;
+    bottom: 34%;
+}
+.pixel {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+}
+
+.pixel-blue {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: blue;
+}
+
+.active {
+    background-color: black;
+}

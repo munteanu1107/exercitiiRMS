@@ -1,0 +1,21 @@
+{{outlet}}
+
+{{#each dataObject as |clock|}}
+    {{#clock-component
+        model=clock
+        timezone=clock.timezone.time
+        id=clock.id
+        style=clock.style
+        radius = clock.radius
+        sendActionComponent=(action "getComponent")
+        sendActionHideComponent=(action "hideComponent")
+    }}{{/clock-component}}
+{{/each}}
+
+
+<div class="main-accordion">
+    {{#each dataObject as |data|}}
+        {{#accordion-panel model=data clockTimezone=data.timezone.city}}
+        {{/accordion-panel}}
+    {{/each}}
+</div>

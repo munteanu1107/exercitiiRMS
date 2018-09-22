@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <div id="container">
+        <div id="controller">
+            <div class="inputs">
+                <div id="depthDiv">
+                    Depth: <input type="number" id="depth"><br>
+                </div>
+
+                <div id="lengthDiv">
+                    Length: <input type="number" id="length"><br>
+                </div>
+
+                <div id="lengthScaleDiv">
+                    Length Scale: <input type="number" name="lengthScale" id="lengthScale">
+                </div>
+
+                <div id="dthetaDiv">
+                    DTheta: <input type="number" name="dTheta" id="dTheta">
+                </div>
+            </div>
+        </div>
+        <div id="tree">
+                <canvas id="canvas_main"></canvas>
+        </div>
+    </div>
+
+    <script src="./arbore_binar.js"></script>
+</body>
+</html>

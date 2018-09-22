@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.6.1.css">
+    <title>Reorder Tests</title>
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+
+    <script src="https://code.jquery.com/qunit/qunit-2.6.1.js"></script>
+    <script src="./index.js"></script>
+
+    <script>
+
+        QUnit.module("Reorder shapes", function( hooks ) {
+            var shapeManager = new MainShape();
+            var shape  = {
+                width: 800,
+                height: 50,
+                xPos: 100,
+                yPos: 80,
+                distance: 40,
+                index: 0,
+                resizable: true,
+                resizablePoints: ["top", "left", "right", "bottom"]
+            }
+
+            var shapesArray = [];
+            shapesArray.push(shape);
+
+            hooks.beforeEach( function( assert ) {
+                assert.ok(shapeManager, "instance of MainShape() is created");
+            });
+
+
+            QUnit.test("ShapeManager has a method init", function(assert) {
+                console.log(shapeManager)
+            });
+        });
+
+
+    </script>
+</body>
+</html>
